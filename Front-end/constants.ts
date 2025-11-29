@@ -3,29 +3,41 @@
 // Durante runtime, Vite expone estas variables automáticamente si están en envPrefix
 
 // Función helper para obtener variables de entorno de forma segura
+// En Vite, las variables con prefijo NEXT_PUBLIC_ o VITE_ están disponibles en import.meta.env
+// Durante el build, Vite reemplaza import.meta.env.* con los valores reales
 function getEnvVar(key: string, fallback: string = ''): string {
-  // En Vite, las variables con prefijo NEXT_PUBLIC_ o VITE_ están disponibles en import.meta.env
-  // Durante el build, Vite reemplaza import.meta.env.* con los valores reales
+  // En runtime del navegador, import.meta.env está disponible con las variables expuestas
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     // Intentar con el nombre exacto primero (NEXT_PUBLIC_*)
     let value = import.meta.env[key];
-    if (value && typeof value === 'string' && value.trim() && value !== 'undefined') {
-      return value;
+    
+    // Verificar que el valor sea válido (no undefined, null, o string "undefined")
+    if (value !== undefined && value !== null && value !== 'undefined' && value !== 'null') {
+      const strValue = String(value).trim();
+      if (strValue.length > 0) {
+        return strValue;
+      }
     }
     
     // Intentar con VITE_ prefix como alternativa
     const viteKey = key.replace('NEXT_PUBLIC_', 'VITE_');
     value = import.meta.env[viteKey];
-    if (value && typeof value === 'string' && value.trim() && value !== 'undefined') {
-      return value;
+    if (value !== undefined && value !== null && value !== 'undefined' && value !== 'null') {
+      const strValue = String(value).trim();
+      if (strValue.length > 0) {
+        return strValue;
+      }
     }
   }
   
-  // Fallback para process.env (útil en algunos contextos de build)
+  // Fallback para process.env (útil durante el build, no en runtime del navegador)
   if (typeof process !== 'undefined' && process.env) {
     const value = process.env[key];
-    if (value && typeof value === 'string' && value.trim() && value !== 'undefined') {
-      return value;
+    if (value !== undefined && value !== null && value !== 'undefined' && value !== 'null') {
+      const strValue = String(value).trim();
+      if (strValue.length > 0) {
+        return strValue;
+      }
     }
   }
   
