@@ -1,0 +1,7 @@
+nombre,edad,region,area_estudio,estado,razon_no_continuar,tiene_capacitacion,programa_asignado,fecha_rechazo_count
+María González,22,Metropolitana,Salud,Activo,,false,OTL,0
+Carlos Rodríguez,28,Valparaíso,Salud,Receso,Falta de Tiempo,false,,2
+Ana Martínez,35,Biobío,Educación,Activo,,true,Abre,0
+Luis Fernández,45,Maule,Salud,Sin Asignación,,false,,1
+Patricia López,19,Metropolitana,Salud,Activo,,false,OTL,0
+

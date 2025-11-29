@@ -1,0 +1,60 @@
+### Variables
+@baseUrl = http://localhost:8000
+@contentType = application/json
+
+### Root
+GET {{baseUrl}}/
+
+### Registrar Voluntario
+POST {{baseUrl}}/api/voluntarios/registro
+Content-Type: {{contentType}}
+
+{
+  "nombre": "Juan Pérez",
+  "edad": 25,
+  "region": "Metropolitana",
+  "area_estudio": "Salud",
+  "estado": "Activo",
+  "razon_no_continuar": "Falta de Tiempo",
+  "tiene_capacitacion": false,
+  "programa_asignado": "OTL",
+  "fecha_rechazo_count": 1
+}
+
+### Listar Voluntarios
+GET {{baseUrl}}/api/voluntarios/?skip=0&limit=10
+
+### Buscar Voluntarios - GET
+GET {{baseUrl}}/api/voluntarios/search?min_score_riesgo=75&region=Metropolitana&brecha_pendiente=true
+
+### Buscar Voluntarios - POST
+POST {{baseUrl}}/api/voluntarios/search
+Content-Type: {{contentType}}
+
+{
+  "min_score_riesgo": 75,
+  "region": "Metropolitana",
+  "area_estudio": "Salud",
+  "brecha_pendiente": true
+}
+
+### RPA - Acción Urgente
+GET {{baseUrl}}/api/rpa/accion_urgente
+
+### Obtener Voluntario por ID
+GET {{baseUrl}}/api/voluntarios/1
+
+### Actualizar Voluntario
+PUT {{baseUrl}}/api/voluntarios/1
+Content-Type: {{contentType}}
+
+{
+  "nombre": "Juan Pérez",
+  "edad": 26,
+  "region": "Metropolitana",
+  "area_estudio": "Salud",
+  "estado": "Receso",
+  "tiene_capacitacion": true,
+  "programa_asignado": "OTL"
+}
+

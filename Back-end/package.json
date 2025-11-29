@@ -4,7 +4,8 @@
   "description": "Backend scripts and utilities for BotathonV2",
   "type": "module",
   "scripts": {
-    "seed:voluntarios": "tsx seed-voluntarios.ts"
+    "seed:voluntarios": "tsx seed-voluntarios.ts",
+    "seed": "tsx ../scripts/seed_voluntarios.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",

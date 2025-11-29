@@ -75,13 +75,27 @@ export default function DashboardPage() {
 
   // 3. New Today
   const newToday = volunteers.filter(v => {
-    if (!v.fecha_registro) return false;
-    const regDate = new Date(v.fecha_registro).toISOString().split('T')[0];
+    if (!v.fecha_registro && !v.created_at) return false;
+    const regDate = v.fecha_registro 
+      ? new Date(v.fecha_registro).toISOString().split('T')[0]
+      : new Date(v.created_at).toISOString().split('T')[0];
     const today = new Date().toISOString().split('T')[0];
     return regDate === today;
   }).length;
 
-  // 4. Chart Data: Distribution by Region
+  // 4. En Riesgo (score_riesgo_baja >= 75)
+  const enRiesgo = volunteers.filter(v => {
+    const score = (v as any).score_riesgo_baja;
+    return typeof score === 'number' && score >= 75;
+  }).length;
+
+  // 5. Brechas Detectadas (flag_brecha_cap = true)
+  const brechasDetectadas = volunteers.filter(v => {
+    const flag = (v as any).flag_brecha_cap;
+    return flag === true;
+  }).length;
+
+  // 6. Chart Data: Distribution by Region
   const regionStats = volunteers.reduce((acc, curr) => {
     const region = curr.region || 'Sin Región';
     acc[region] = (acc[region] || 0) + 1;
@@ -130,7 +144,7 @@ export default function DashboardPage() {
       )}
 
       {/* 2. KPIs Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {/* KPI Card 1 */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start justify-between">
           <div>
@@ -177,6 +191,38 @@ export default function DashboardPage() {
           </div>
           <div className="p-3 bg-green-50 rounded-lg text-green-600">
             <UserPlus className="h-6 w-6" />
+          </div>
+        </div>
+
+        {/* KPI Card 4 - En Riesgo */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">En Riesgo</p>
+            <h3 className="text-3xl font-bold text-orange-600">
+              {loading ? "-" : enRiesgo}
+            </h3>
+            <p className="text-xs text-gray-400 mt-2">
+              Score ≥ 75
+            </p>
+          </div>
+          <div className="p-3 bg-orange-50 rounded-lg text-orange-600">
+            <AlertCircle className="h-6 w-6" />
+          </div>
+        </div>
+
+        {/* KPI Card 5 - Brechas */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">Brechas Detectadas</p>
+            <h3 className="text-3xl font-bold text-red-600">
+              {loading ? "-" : brechasDetectadas}
+            </h3>
+            <p className="text-xs text-gray-400 mt-2">
+              Requieren capacitacion
+            </p>
+          </div>
+          <div className="p-3 bg-red-50 rounded-lg text-red-600">
+            <AlertCircle className="h-6 w-6" />
           </div>
         </div>
       </div>
