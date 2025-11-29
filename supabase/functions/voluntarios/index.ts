@@ -14,20 +14,36 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false }
 });
 
-// Cabeceras CORS robustas para desarrollo y producción
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:3000, https://<nombre-del-deploy-de-vercel>.vercel.app, *",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
-};
+// Helper para obtener el origen permitido basado en el request
+function getOrigin(req: Request): string {
+  const origin = req.headers.get("origin");
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173"
+  ];
+  
+  // Si el origen está en la lista permitida, usarlo; si no, usar wildcard
+  if (origin && allowedOrigins.includes(origin)) {
+    return origin;
+  }
+  
+  // Para producción, puedes agregar aquí tu dominio de Vercel
+  // Por ahora, usamos wildcard para desarrollo
+  return "*";
+}
 
-// Helper para obtener headers CORS con extras
-function getCorsHeaders(extra?: Record<string, string>) {
+// Cabeceras CORS robustas para desarrollo y producción
+function getCorsHeaders(req: Request, extra?: Record<string, string>) {
   return {
-    ...corsHeaders,
+    "Access-Control-Allow-Origin": getOrigin(req),
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     ...(extra || {})
   };
 }
+
 
 // Helper para convertir strings a arrays
 function parseToArray(value: unknown): string[] {
@@ -49,7 +65,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
-      headers: getCorsHeaders()
+      headers: getCorsHeaders(req)
     });
   }
 
@@ -62,7 +78,7 @@ Deno.serve(async (req: Request) => {
     };
     return new Response(JSON.stringify(body), {
       status: 405,
-      headers: getCorsHeaders({ "Content-Type": "application/json" })
+      headers: getCorsHeaders(req, { "Content-Type": "application/json" })
     });
   }
 
@@ -78,7 +94,7 @@ Deno.serve(async (req: Request) => {
       };
       return new Response(JSON.stringify(body), {
         status: 400,
-        headers: getCorsHeaders({ "Content-Type": "application/json" })
+        headers: getCorsHeaders(req, { "Content-Type": "application/json" })
       });
     }
 
@@ -105,7 +121,7 @@ Deno.serve(async (req: Request) => {
     );
 
     const nivel_educacional = (rawBody["nivel_educacional"] || "").toString().trim();
-    const estado = (rawBody["estado"] || "pendiente").toString().trim();
+    // No incluir 'estado' ya que la columna no existe en la BD
 
     // Validación de campos obligatorios
     const missingFields: string[] = [];
@@ -121,112 +137,109 @@ Deno.serve(async (req: Request) => {
       };
       return new Response(JSON.stringify(body), {
         status: 400,
-        headers: getCorsHeaders({ "Content-Type": "application/json" })
+        headers: getCorsHeaders(req, { "Content-Type": "application/json" })
       });
     }
 
-    // Preparar payload base para upsert
+    // Preparar payload base para upsert (sin 'estado' ya que no existe en la BD)
     const payload: Record<string, unknown> = {
       nombre,
       correo,
-      region,
-      nivel_educacional,
-      estado
+      region
     };
 
+    // Solo incluir nivel_educacional si tiene valor
+    if (nivel_educacional) {
+      payload.nivel_educacional = nivel_educacional;
+    }
+
+    // Solo incluir habilidades si tiene valores
     if (habilidades.length > 0) {
       payload.habilidades = habilidades;
     }
 
-    // Intentar upsert con diferentes estrategias para manejar el problema de encoding de campañas
+    // Intentar upsert - primero sin campañas para evitar problemas de encoding
     let data: unknown = null;
     let error: { message: string; code?: string } | null = null;
 
-    // Estrategia 1: Intentar con campañas si tiene valores
-    if (campañas.length > 0) {
-      // Intentar con diferentes variantes del nombre de columna
-      const campanaVariants = [
-        "campañas",  // Nombre correcto con tilde
-        "campanas",  // Sin tilde
-        "campaÃ±as"  // Encoding corrupto (como aparece en la BD)
-      ];
+    console.log("[voluntarios] Intentando upsert con payload:", {
+      nombre,
+      correo,
+      region,
+      tiene_nivel: !!nivel_educacional,
+      tiene_habilidades: habilidades.length > 0,
+      tiene_campanas: campañas.length > 0
+    });
 
-      let success = false;
+    // Estrategia: Intentar primero sin campañas (más seguro)
+    const result = await supabase
+      .from("voluntarios")
+      .upsert(payload, {
+        onConflict: "correo"
+      })
+      .select()
+      .single();
+
+    if (result.error) {
+      error = result.error;
+      console.error("[voluntarios] Error en upsert inicial:", error.message, error.code);
       
-      for (const variant of campanaVariants) {
-        const testPayload = { ...payload, [variant]: campañas };
-        
-        const result = await supabase
+      // Si el error es por onConflict, intentar sin especificar onConflict
+      if (error.code === "23505" || error.message?.includes("duplicate") || error.message?.includes("unique")) {
+        console.log("[voluntarios] Error de duplicado, intentando insert normal...");
+        const insertResult = await supabase
           .from("voluntarios")
-          .upsert(testPayload, {
-            onConflict: "correo"
-          })
+          .insert(payload)
           .select()
           .single();
-
-        if (!result.error) {
-          data = result.data;
-          success = true;
-          console.log(`[voluntarios] Upsert exitoso usando columna: ${variant}`);
-          break;
+        
+        if (insertResult.error) {
+          error = insertResult.error;
         } else {
-          // Si el error es específico de columna no encontrada, intentar siguiente variante
-          if (result.error.message?.includes("column") || result.error.code === "PGRST204") {
-            console.log(`[voluntarios] Variante ${variant} falló, intentando siguiente...`);
-            continue;
-          } else {
-            // Si es otro tipo de error, detener y reportar
-            error = result.error;
+          data = insertResult.data;
+          console.log("[voluntarios] Insert exitoso");
+        }
+      }
+    } else {
+      data = result.data;
+      console.log("[voluntarios] Upsert exitoso");
+      
+      // Si hay campañas y el upsert fue exitoso, intentar actualizar solo las campañas
+      if (campañas.length > 0 && data) {
+        console.log("[voluntarios] Intentando actualizar campañas por separado...");
+        const campanaVariants = ["campanas", "campañas", "campaÃ±as"];
+        
+        for (const variant of campanaVariants) {
+          const updateResult = await supabase
+            .from("voluntarios")
+            .update({ [variant]: campañas })
+            .eq("correo", correo)
+            .select()
+            .single();
+          
+          if (!updateResult.error) {
+            data = updateResult.data;
+            console.log(`[voluntarios] Campañas actualizadas usando: ${variant}`);
             break;
           }
         }
       }
-
-      // Si todas las variantes fallaron, intentar sin campañas
-      if (!success && !error) {
-        console.log("[voluntarios] Todas las variantes de campañas fallaron, intentando sin campañas...");
-        const resultWithoutCampanas = await supabase
-          .from("voluntarios")
-          .upsert(payload, {
-            onConflict: "correo"
-          })
-          .select()
-          .single();
-
-        if (resultWithoutCampanas.error) {
-          error = resultWithoutCampanas.error;
-        } else {
-          data = resultWithoutCampanas.data;
-          console.log("[voluntarios] Upsert exitoso sin campañas (se guardaron otros campos)");
-        }
-      }
-    } else {
-      // No hay campañas, hacer upsert normal
-      const result = await supabase
-        .from("voluntarios")
-        .upsert(payload, {
-          onConflict: "correo"
-        })
-        .select()
-        .single();
-
-      if (result.error) {
-        error = result.error;
-      } else {
-        data = result.data;
-      }
     }
 
     if (error) {
-      console.error("[voluntarios] Error Supabase:", error.message);
+      console.error("[voluntarios] Error final Supabase:", {
+        message: error.message,
+        code: error.code,
+        hint: error.message
+      });
       const body = {
         success: false,
         message: "Error al registrar voluntario",
-        details: error.message
+        details: `${error.message}${error.code ? ` (Código: ${error.code})` : ''}`
       };
       return new Response(JSON.stringify(body), {
         status: 500,
-        headers: getCorsHeaders({ "Content-Type": "application/json" })
+        headers: getCorsHeaders(req, { "Content-Type": "application/json" })
       });
     }
 
@@ -238,7 +251,7 @@ Deno.serve(async (req: Request) => {
 
     return new Response(JSON.stringify(body), {
       status: 200,
-      headers: getCorsHeaders({ "Content-Type": "application/json" })
+      headers: getCorsHeaders(req, { "Content-Type": "application/json" })
     });
   } catch (err) {
     console.error("[voluntarios] Error interno:", err instanceof Error ? err.message : String(err));
@@ -249,7 +262,7 @@ Deno.serve(async (req: Request) => {
     };
     return new Response(JSON.stringify(body), {
       status: 500,
-      headers: getCorsHeaders({ "Content-Type": "application/json" })
+      headers: getCorsHeaders(req, { "Content-Type": "application/json" })
     });
   }
 });

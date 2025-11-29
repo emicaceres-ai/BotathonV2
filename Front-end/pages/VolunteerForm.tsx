@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { API_CONFIG } from '../constants';
 
 const REGIONES_CHILE = [
   "Arica y Parinacota", "Tarapacá", "Antofagasta", "Atacama", "Coquimbo", 
@@ -32,32 +33,90 @@ export default function Page() {
     setStatus('loading');
     setErrorMessage('');
 
-    const payload = {
+    // Preparar payload sin 'estado' (la columna no existe en la BD)
+    // y sin 'campanas' si está vacío (para evitar errores de encoding)
+    const habilidades = formData.habilidades_input.split(',').map(s => s.trim()).filter(Boolean);
+    const campanas = formData.campanas_input.split(',').map(s => s.trim()).filter(Boolean);
+    
+    const payload: Record<string, unknown> = {
       nombre: formData.nombre,
       correo: formData.correo,
       region: formData.region,
-      nivel_educacional: formData.nivel_educacional,
-      habilidades: formData.habilidades_input.split(',').map(s => s.trim()).filter(Boolean),
-      campanas: formData.campanas_input.split(',').map(s => s.trim()).filter(Boolean),
-      estado: 'pendiente'
+      nivel_educacional: formData.nivel_educacional
     };
+
+    if (habilidades.length > 0) {
+      payload.habilidades = habilidades;
+    }
+    
+    // Solo incluir campanas si tiene valores (evita errores de encoding)
+    // Nota: La columna tiene problemas de encoding, así que puede fallar
+    // El backend manejará esto automáticamente
+    if (campanas.length > 0) {
+      payload.campanas = campanas;
+    }
+
+    // Obtener la anon key de API_CONFIG o usar fallback
+    const anonKey = API_CONFIG.ANON_KEY || 
+                    (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468';
+
+    if (!anonKey) {
+      setStatus('error');
+      setErrorMessage('Error de configuración: No se encontró la clave de autenticación. Contacta al administrador.');
+      return;
+    }
 
     try {
       const response = await fetch(
-        "https://tatvmvjoinyfkxeclbso.supabase.co/functions/v1/voluntarios",
+        `${API_CONFIG.BASE_URL}/voluntarios`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+            "Authorization": `Bearer ${anonKey}`,
           },
           body: JSON.stringify(payload)
         }
       );
 
       if (!response.ok) {
-        const errText = await response.text();
-        throw new Error("Error en el servidor: " + errText);
+        let errorMessage = 'Error al registrar voluntario';
+        let errorDetails = '';
+        
+        try {
+          const errorData = await response.json();
+          if (errorData.success === false) {
+            errorMessage = errorData.message || 'Error al registrar voluntario';
+            errorDetails = errorData.details || '';
+          } else {
+            errorMessage = errorData.message || errorData.error?.message || `Error ${response.status}`;
+            errorDetails = errorData.details || errorData.error?.details || '';
+          }
+        } catch {
+          try {
+            const errorText = await response.text();
+            errorDetails = errorText || response.statusText;
+          } catch {
+            errorDetails = response.statusText || `Error ${response.status}`;
+          }
+        }
+        
+        // Mostrar detalles del error en consola para debugging
+        console.error('Error del servidor:', {
+          status: response.status,
+          message: errorMessage,
+          details: errorDetails
+        });
+        
+        throw new Error(errorDetails ? `${errorMessage}: ${errorDetails}` : errorMessage);
+      }
+
+      const result = await response.json();
+      
+      // Verificar si la respuesta tiene el formato esperado
+      if (result.success === false) {
+        throw new Error(result.message || 'Error al registrar voluntario');
       }
 
       setStatus('success');
@@ -74,7 +133,14 @@ export default function Page() {
 
     } catch (error) {
       setStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Error desconocido');
+      if (error instanceof TypeError && (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) {
+        setErrorMessage('Error de conexión. Verifica tu conexión a internet o que el servidor esté disponible. Si el problema persiste, contacta al administrador.');
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('Error desconocido al enviar el formulario. Por favor, intenta nuevamente.');
+      }
+      console.error('Error al crear voluntario:', error);
     }
   };
 

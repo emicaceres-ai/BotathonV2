@@ -14,17 +14,32 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false }
 });
 
-// Cabeceras CORS robustas para desarrollo y producción
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:3000, https://<nombre-del-deploy-de-vercel>.vercel.app, *",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
-};
+// Helper para obtener el origen permitido basado en el request
+function getOrigin(req: Request): string {
+  const origin = req.headers.get("origin");
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173"
+  ];
+  
+  // Si el origen está en la lista permitida, usarlo; si no, usar wildcard
+  if (origin && allowedOrigins.includes(origin)) {
+    return origin;
+  }
+  
+  // Para producción, puedes agregar aquí tu dominio de Vercel
+  // Por ahora, usamos wildcard para desarrollo
+  return "*";
+}
 
 // Helper para obtener headers CORS con extras
-function getCorsHeaders(extra?: Record<string, string>) {
+function getCorsHeaders(req: Request, extra?: Record<string, string>) {
   return {
-    ...corsHeaders,
+    "Access-Control-Allow-Origin": getOrigin(req),
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     ...(extra || {})
   };
 }
@@ -35,7 +50,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
-      headers: getCorsHeaders()
+      headers: getCorsHeaders(req)
     });
   }
 
@@ -48,7 +63,7 @@ Deno.serve(async (req: Request) => {
     };
     return new Response(JSON.stringify(body), {
       status: 405,
-      headers: getCorsHeaders({ "Content-Type": "application/json" })
+      headers: getCorsHeaders(req, { "Content-Type": "application/json" })
     });
   }
 
@@ -95,7 +110,7 @@ Deno.serve(async (req: Request) => {
       };
       return new Response(JSON.stringify(body), {
         status: 500,
-        headers: getCorsHeaders({ "Content-Type": "application/json" })
+        headers: getCorsHeaders(req, { "Content-Type": "application/json" })
       });
     }
 
@@ -107,7 +122,7 @@ Deno.serve(async (req: Request) => {
 
     return new Response(JSON.stringify(body), {
       status: 200,
-      headers: getCorsHeaders({ "Content-Type": "application/json" })
+      headers: getCorsHeaders(req, { "Content-Type": "application/json" })
     });
   } catch (err) {
     console.error("[buscar] Error interno:", err instanceof Error ? err.message : String(err));
@@ -118,7 +133,7 @@ Deno.serve(async (req: Request) => {
     };
     return new Response(JSON.stringify(body), {
       status: 500,
-      headers: getCorsHeaders({ "Content-Type": "application/json" })
+      headers: getCorsHeaders(req, { "Content-Type": "application/json" })
     });
   }
 });
