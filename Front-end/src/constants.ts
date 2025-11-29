@@ -1,31 +1,21 @@
-// Variables de entorno usando VITE_* y NEXT_PUBLIC_* para compatibilidad
-// Vite expone automáticamente las variables con prefijo VITE_ o NEXT_PUBLIC_ en import.meta.env
-
-// Validar variables de entorno en producción
-const getEnvVar = (keys: string[], fallback?: string): string => {
-  for (const key of keys) {
-    const value = import.meta.env[key];
-    if (value && typeof value === 'string' && value.trim()) {
-      return value;
-    }
+// Variables de entorno - soporta VITE_* y NEXT_PUBLIC_*
+const getEnvVar = (key: string, altKey?: string, fallback?: string): string => {
+  const value = import.meta.env[key] || (altKey ? import.meta.env[altKey] : undefined);
+  if (value && typeof value === 'string' && value.trim()) {
+    return value;
   }
-  
-  if (!fallback) {
-    throw new Error(
-      `❌ Variable de entorno faltante: ${keys.join(' o ')}\n` +
-      `Por favor configura una de estas en Vercel → Settings → Environment Variables`
-    );
-  }
-  return fallback;
+  return fallback || '';
 };
 
 const SUPABASE_URL = getEnvVar(
-  ['VITE_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL'],
+  'VITE_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_URL',
   'https://tatvmyjoinyfkxeclbso.supabase.co'
 );
 
 const SUPABASE_ANON_KEY = getEnvVar(
-  ['VITE_SUPABASE_ANON_KEY', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'],
+  'VITE_SUPABASE_ANON_KEY',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468'
 );
 

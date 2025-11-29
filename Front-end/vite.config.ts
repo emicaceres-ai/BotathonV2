@@ -4,14 +4,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  // Exponer variables de entorno con prefijos VITE_ y NEXT_PUBLIC_ para compatibilidad
   envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
-  define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
-  },
-  css: {
-    devSourcemap: true
-  },
   server: {
     port: 5173,
     host: '0.0.0.0',
@@ -20,28 +13,17 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
-    minify: 'esbuild',
     cssCodeSplit: true,
-    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Separar vendor chunks de forma más específica
           if (id.includes('node_modules')) {
-            // React core debe estar separado
-            if (id.includes('react/') || id.includes('react-dom/')) {
-              return 'react-core';
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
             }
-            // React Router debe estar en su propio chunk
-            if (id.includes('react-router')) {
-              return 'react-router';
-            }
-            // Recharts en su propio chunk
             if (id.includes('recharts')) {
               return 'chart-vendor';
             }
-            // Resto de vendors
             return 'vendor';
           }
         }
