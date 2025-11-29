@@ -1,41 +1,8 @@
 {
-  "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install --legacy-peer-deps",
-  "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!api|_next|assets|.*\\.(css|js|mjs|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map|webp)|favicon\\.ico|index\\.css|styles/).*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
       "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "destination": "/index.html"
     }
   ]
 }

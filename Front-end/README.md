@@ -13,8 +13,8 @@ npm install
 
 Crea o verifica `Front-end/.env.local`:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tatvmyjoinyfkxeclbso.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_aqui
+VITE_SUPABASE_URL=https://tatvmyjoinyfkxeclbso.supabase.co
+VITE_SUPABASE_ANON_KEY=tu_anon_key_aqui
 ```
 
 ### 3. Ejecutar en desarrollo
