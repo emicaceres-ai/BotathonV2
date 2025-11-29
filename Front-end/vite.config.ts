@@ -32,15 +32,8 @@ export default defineConfig(({ mode }) => {
         }
       }
     },
-    define: {
-      // Exponer variables de entorno para el cliente (compatibilidad con Vercel)
-      'process.env.NEXT_PUBLIC_SUPABASE_URL': JSON.stringify(
-        env.NEXT_PUBLIC_SUPABASE_URL || import.meta.env?.NEXT_PUBLIC_SUPABASE_URL || 'https://tatvmyjoinyfkxeclbso.supabase.co'
-      ),
-      'process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY': JSON.stringify(
-        env.NEXT_PUBLIC_SUPABASE_ANON_KEY || import.meta.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-      ),
-    },
+    // No usar define para variables de entorno - Vite las expone automáticamente con envPrefix
+    // Las variables NEXT_PUBLIC_* estarán disponibles en import.meta.env.NEXT_PUBLIC_*
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './'),

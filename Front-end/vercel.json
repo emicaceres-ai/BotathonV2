@@ -6,7 +6,7 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/((?!api|_next|assets|.*\\..*|favicon.ico).*)",
+      "source": "/((?!api|_next|assets|.*\\.(css|js|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)|favicon\\.ico).*)",
       "destination": "/index.html"
     }
   ],

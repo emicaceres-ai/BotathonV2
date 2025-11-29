@@ -6,19 +6,32 @@
 function getEnvVar(key: string, fallback: string = ''): string {
   // En Vite, las variables con prefijo NEXT_PUBLIC_ o VITE_ están disponibles en import.meta.env
   if (typeof import.meta !== 'undefined' && import.meta.env) {
-    const value = import.meta.env[key] || import.meta.env[`VITE_${key.replace('NEXT_PUBLIC_', '')}`];
-    if (value) return value;
+    // Intentar con el nombre exacto primero
+    let value = import.meta.env[key];
+    if (value && typeof value === 'string' && value.trim()) {
+      return value;
+    }
+    
+    // Intentar con VITE_ prefix
+    const viteKey = key.replace('NEXT_PUBLIC_', 'VITE_');
+    value = import.meta.env[viteKey];
+    if (value && typeof value === 'string' && value.trim()) {
+      return value;
+    }
   }
   
   // Fallback para process.env (útil en algunos contextos)
   if (typeof process !== 'undefined' && process.env) {
     const value = process.env[key];
-    if (value) return value;
+    if (value && typeof value === 'string' && value.trim()) {
+      return value;
+    }
   }
   
   return fallback;
 }
 
+// Obtener variables de entorno con fallbacks
 const SUPABASE_ANON_KEY = getEnvVar(
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468'
@@ -28,6 +41,16 @@ const SUPABASE_URL = getEnvVar(
   'NEXT_PUBLIC_SUPABASE_URL',
   'https://tatvmyjoinyfkxeclbso.supabase.co'
 );
+
+// Debug en desarrollo (no en producción)
+if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1'))) {
+  console.log('[DEBUG] Variables de entorno:', {
+    hasAnonKey: !!SUPABASE_ANON_KEY,
+    anonKeyLength: SUPABASE_ANON_KEY?.length || 0,
+    supabaseUrl: SUPABASE_URL,
+    importMetaEnv: typeof import.meta !== 'undefined' ? Object.keys(import.meta.env || {}).filter(k => k.includes('SUPABASE')) : []
+  });
+}
 
 export const API_CONFIG = {
   // Base URL corregida al project ID real de Supabase
