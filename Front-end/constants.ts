@@ -42,14 +42,20 @@ const SUPABASE_URL = getEnvVar(
   'https://tatvmyjoinyfkxeclbso.supabase.co'
 );
 
-// Debug en desarrollo (no en producción)
-if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1'))) {
-  console.log('[DEBUG] Variables de entorno:', {
-    hasAnonKey: !!SUPABASE_ANON_KEY,
-    anonKeyLength: SUPABASE_ANON_KEY?.length || 0,
-    supabaseUrl: SUPABASE_URL,
-    importMetaEnv: typeof import.meta !== 'undefined' ? Object.keys(import.meta.env || {}).filter(k => k.includes('SUPABASE')) : []
-  });
+// Debug en desarrollo (solo en runtime del navegador, no durante build)
+// Este código solo se ejecuta en el navegador, no durante el build de Vite
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  try {
+    if (window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1')) {
+      console.log('[DEBUG] Variables de entorno:', {
+        hasAnonKey: !!SUPABASE_ANON_KEY,
+        anonKeyLength: SUPABASE_ANON_KEY?.length || 0,
+        supabaseUrl: SUPABASE_URL
+      });
+    }
+  } catch (e) {
+    // Ignorar errores en el debug
+  }
 }
 
 export const API_CONFIG = {
