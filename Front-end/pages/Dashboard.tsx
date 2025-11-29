@@ -19,26 +19,41 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer,
-  Cell 
+  Cell,
+  PieChart,
+  Pie,
+  Legend
 } from 'recharts';
+import HeatMap from '../components/HeatMap';
 import { Volunteer } from '../types';
 import { API_CONFIG } from '../constants';
+import VolunteerModal from '../components/VolunteerModal';
 
 export default function DashboardPage() {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchVolunteers = async () => {
     setLoading(true);
     setError(null);
     try {
       // Usamos el endpoint real de Supabase y el header de autorización solicitado
+      const anonKey = API_CONFIG.ANON_KEY || 
+                      (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
+                      (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
+                      '';
+      
+      if (!anonKey) {
+        throw new Error('Error de configuración: No se encontró la clave de autenticación. Verifica .env.local');
+      }
+
       const response = await fetch(`${API_CONFIG.BASE_URL}/buscar`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          "Authorization": `Bearer ${anonKey}`,
           "Content-Type": "application/json"
         }
       });
@@ -95,7 +110,32 @@ export default function DashboardPage() {
     return flag === true;
   }).length;
 
-  // 6. Chart Data: Distribution by Region
+  // 6. KPIs Específicos del MVP
+  const razonNoContinuar = volunteers.filter(v => {
+    const razon = (v as any).razon_no_continuar;
+    return razon && (razon.toLowerCase().includes('tiempo') || razon.toLowerCase().includes('falta'));
+  }).length;
+  const porcentajeRazonPrincipal = totalVolunteers > 0 
+    ? ((razonNoContinuar / totalVolunteers) * 100).toFixed(1) 
+    : '0.0';
+
+  const talentoSalud = volunteers.filter(v => {
+    const area = (v as any).area_estudio;
+    return area && area.toUpperCase() === 'SALUD';
+  }).length;
+  const porcentajeTalentoSalud = totalVolunteers > 0 
+    ? ((talentoSalud / totalVolunteers) * 100).toFixed(1) 
+    : '0.0';
+
+  const rangoEtario1829 = volunteers.filter(v => {
+    const rango = (v as any).rango_etario;
+    return rango && rango.includes('18-29');
+  }).length;
+  const porcentajeRango1829 = totalVolunteers > 0 
+    ? ((rangoEtario1829 / totalVolunteers) * 100).toFixed(1) 
+    : '0.0';
+
+  // 7. Chart Data: Distribution by Region
   const regionStats = volunteers.reduce((acc, curr) => {
     const region = curr.region || 'Sin Región';
     acc[region] = (acc[region] || 0) + 1;
@@ -104,8 +144,30 @@ export default function DashboardPage() {
 
   const chartData = Object.entries(regionStats)
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count) // Sort by highest count
-    .slice(0, 10); // Top 10 regions to keep chart clean
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+
+  // 8. Gráfico de Dona - Distribución de Talento por Área
+  const areaStats = volunteers.reduce((acc, curr) => {
+    const area = (curr as any).area_estudio || 'Sin Área';
+    acc[area] = (acc[area] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const donutData = Object.entries(areaStats)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
+
+  const COLORS = ['#d91f26', '#b91b22', '#991b1b', '#7f1d1d', '#dc2626', '#ef4444'];
+
+  // 9. Mapa de Calor - Representatividad por Región
+  // Simulamos representatividad basada en el número de voluntarios
+  const maxVolunteers = Math.max(...Object.values(regionStats), 1);
+  const heatMapData = Object.entries(regionStats).map(([region, count]) => ({
+    region,
+    voluntarios: count,
+    representatividad: (count / maxVolunteers) * 100
+  }));
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -120,14 +182,23 @@ export default function DashboardPage() {
           <span className="text-xs text-gray-400 hidden md:inline-block">
             Actualizado: {lastUpdated.toLocaleTimeString()}
           </span>
-          <button 
-            onClick={fetchVolunteers}
-            disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50"
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-            Actualizar Datos
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              <UserPlus className="h-4 w-4" />
+              Registrar Nuevo Voluntario
+            </button>
+            <button 
+              onClick={fetchVolunteers}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-50"
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              Actualizar Datos
+            </button>
+          </div>
         </div>
       </div>
 
@@ -143,7 +214,46 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* 2. KPIs Section */}
+      {/* 2. KPIs Section - Métricas Críticas del MVP */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* KPI: Razón Principal de Baja */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Razón Principal de Baja</p>
+          <h3 className="text-3xl font-bold text-gray-900">
+            {loading ? "-" : `${porcentajeRazonPrincipal}%`}
+          </h3>
+          <p className="text-xs text-gray-400 mt-2">Falta de Tiempo</p>
+        </div>
+
+        {/* KPI: Talento en Salud */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Talento en Salud</p>
+          <h3 className="text-3xl font-bold text-gray-900">
+            {loading ? "-" : `${porcentajeTalentoSalud}%`}
+          </h3>
+          <p className="text-xs text-gray-400 mt-2">Área de Estudio: Salud</p>
+        </div>
+
+        {/* KPI: Rango Etario 18-29 */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Rango Etario 18-29</p>
+          <h3 className="text-3xl font-bold text-gray-900">
+            {loading ? "-" : `${porcentajeRango1829}%`}
+          </h3>
+          <p className="text-xs text-gray-400 mt-2">Voluntarios jóvenes</p>
+        </div>
+
+        {/* KPI: En Riesgo */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">En Riesgo</p>
+          <h3 className="text-3xl font-bold text-orange-600">
+            {loading ? "-" : enRiesgo}
+          </h3>
+          <p className="text-xs text-gray-400 mt-2">Score ≥ 75</p>
+        </div>
+      </div>
+
+      {/* 2b. KPIs Adicionales */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {/* KPI Card 1 */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start justify-between">
@@ -227,60 +337,114 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 3. Chart Section */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 min-h-[400px]">
-        <div className="flex items-center justify-between mb-6">
-          <div>
+      {/* 3. Gráficos Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Gráfico de Dona - Distribución de Talento */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-900">Distribución de Talento</h3>
+            <p className="text-sm text-gray-500">Por Área de Estudio (énfasis en Salud)</p>
+          </div>
+          <div className="h-80 w-full">
+            {loading ? (
+              <div className="h-full w-full flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              </div>
+            ) : donutData.length === 0 ? (
+              <div className="h-full w-full flex items-center justify-center text-gray-400">
+                <p>No hay datos disponibles</p>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={donutData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {donutData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+
+        {/* Gráfico de Barras - Distribución por Región */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="mb-6">
             <h3 className="text-lg font-bold text-gray-900">Distribución por Región</h3>
             <p className="text-sm text-gray-500">Top regiones con mayor número de voluntarios</p>
           </div>
-          <BarChart3 className="h-5 w-5 text-gray-400" />
-        </div>
-
-        <div className="h-80 w-full">
-          {loading ? (
-            <div className="h-full w-full flex items-center justify-center text-gray-400">
-              <div className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 animate-spin text-teleton-red" />
-                <span className="text-sm">Cargando visualización...</span>
+          <div className="h-80 w-full">
+            {loading ? (
+              <div className="h-full w-full flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
               </div>
-            </div>
-          ) : volunteers.length === 0 ? (
-            <div className="h-full w-full flex items-center justify-center text-gray-400 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-              <p>No hay datos disponibles para el gráfico</p>
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
-                <XAxis 
-                  dataKey="name" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  interval={0} 
-                  tick={{ fontSize: 11, fill: '#6b7280' }}
-                  height={70}
-                />
-                <YAxis 
-                  tick={{ fontSize: 12, fill: '#6b7280' }} 
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip 
-                  cursor={{ fill: '#f3f4f6' }}
-                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                />
-                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#d91f26' : '#b91b22'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          )}
+            ) : chartData.length === 0 ? (
+              <div className="h-full w-full flex items-center justify-center text-gray-400">
+                <p>No hay datos disponibles</p>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
+                  <XAxis 
+                    dataKey="name" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    interval={0} 
+                    tick={{ fontSize: 11, fill: '#6b7280' }}
+                    height={70}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12, fill: '#6b7280' }} 
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+                    cursor={{ fill: '#f3f4f6' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  />
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#d91f26' : '#b91b22'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* 4. Mapa de Calor Regional */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="mb-6">
+          <h3 className="text-lg font-bold text-gray-900">Mapa de Esfuerzo Regional</h3>
+          <p className="text-sm text-gray-500">Representatividad (%) por Instituto/Región - Áreas con baja participación requieren acción de captación</p>
+        </div>
+        <HeatMap data={heatMapData} />
+      </div>
+
+      {/* Modal de Registro */}
+      <VolunteerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {
+          fetchVolunteers();
+          setIsModalOpen(false);
+        }}
+      />
     </div>
   );
 }

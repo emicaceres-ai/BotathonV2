@@ -18,10 +18,27 @@ const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 if (!ANON_KEY) {
   console.error('❌ Error: NEXT_PUBLIC_SUPABASE_ANON_KEY no está definida');
+  console.error('   Crea un archivo .env.local en la raíz con:');
+  console.error('   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key_aqui');
   process.exit(1);
 }
 
-const EDGE_FUNCTION_URL = `${BASE_URL}/functions/v1`;
+// Asegurar que BASE_URL tenga el formato correcto
+const baseUrl = BASE_URL.endsWith('/functions/v1') 
+  ? BASE_URL.replace('/functions/v1', '')
+  : BASE_URL;
+
+const EDGE_FUNCTION_URL = `${baseUrl}/functions/v1`;
+
+// Verificar que fetch esté disponible
+if (typeof fetch === 'undefined') {
+  console.error('❌ Error: fetch no está disponible en esta versión de Node.js');
+  console.error('   Usa Node.js 18+ o instala node-fetch: npm install node-fetch');
+  process.exit(1);
+}
+
+console.log(`ℹ️  URL de Edge Functions: ${EDGE_FUNCTION_URL}`);
+console.log(`ℹ️  ANON_KEY configurada: ${ANON_KEY.substring(0, 20)}...\n`);
 
 // Datos para generar registros sintéticos
 const REGIONES = [
@@ -80,8 +97,10 @@ function generarVoluntario(index) {
 }
 
 async function insertarVoluntario(voluntario) {
+  const url = `${EDGE_FUNCTION_URL}/voluntarios`;
+  
   try {
-    const response = await fetch(`${EDGE_FUNCTION_URL}/voluntarios`, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,18 +110,29 @@ async function insertarVoluntario(voluntario) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Error desconocido' }));
-      throw new Error(errorData.message || response.statusText);
+      let errorMessage = `HTTP ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.details || errorMessage;
+      } catch {
+        const errorText = await response.text().catch(() => '');
+        errorMessage = errorText || response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
     }
 
     const result = await response.json();
     
     if (!result.success) {
-      throw new Error(result.message || 'Error al insertar');
+      throw new Error(result.message || result.details || 'Error al insertar');
     }
 
     return result.data;
   } catch (error) {
+    // Mejorar mensaje de error para fetch failed
+    if (error.message === 'fetch failed' || error.cause) {
+      throw new Error(`Error de conexión a ${url}. Verifica que la Edge Function esté desplegada y la URL sea correcta.`);
+    }
     throw error;
   }
 }
@@ -145,7 +175,15 @@ async function seedVoluntarios() {
       await new Promise(resolve => setTimeout(resolve, 200));
     } catch (error) {
       errores++;
-      console.log(`❌ ${error.message}`);
+      const errorMsg = error.message || error.toString();
+      console.log(`❌ ${errorMsg}`);
+      
+      // Si es el primer error, mostrar más detalles
+      if (errores === 1) {
+        console.log(`\n   💡 URL intentada: ${EDGE_FUNCTION_URL}/voluntarios`);
+        console.log(`   💡 Verifica que la Edge Function esté desplegada en Supabase`);
+        console.log(`   💡 Verifica que NEXT_PUBLIC_SUPABASE_ANON_KEY sea correcta\n`);
+      }
     }
   }
 

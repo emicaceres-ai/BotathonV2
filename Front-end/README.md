@@ -1,20 +1,47 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Frontend - Teletón Voluntarios MVP
 
-# Run and deploy your AI Studio app
+Dashboard de gestión de voluntarios con inteligencia predictiva.
 
-This contains everything you need to run your app locally.
+## 🚀 Inicio Rápido
 
-View your app in AI Studio: https://ai.studio/apps/drive/1dmbxejXHSoXRyRWPDDY2WbudHmK3144D
+### 1. Instalar dependencias
+```bash
+npm install
+```
 
-## Run Locally
+### 2. Configurar variables de entorno
 
-**Prerequisites:**  Node.js
+Crea o verifica `Front-end/.env.local`:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://tatvmyjoinyfkxeclbso.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_aqui
+```
 
+### 3. Ejecutar en desarrollo
+```bash
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+El servidor se abrirá automáticamente en `http://localhost:5173`
+
+## 📍 Rutas Disponibles
+
+- `/` o `/#/` - Dashboard principal
+- `/#/nuevo` - Formulario de nuevo voluntario
+
+## 🎯 Características
+
+- ✅ Dashboard con KPIs en tiempo real
+- ✅ Visualización de voluntarios por región
+- ✅ Métricas de IA (En Riesgo, Brechas Detectadas)
+- ✅ Formulario de registro con validación
+- ✅ Diseño responsive
+
+## 🛠️ Tecnologías
+
+- React 19
+- Vite
+- TypeScript
+- Tailwind CSS
+- Recharts (gráficos)
+- React Router

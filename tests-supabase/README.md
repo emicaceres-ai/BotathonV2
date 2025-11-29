@@ -28,6 +28,9 @@ tests-supabase/
 ### Orden Recomendado de Ejecución
 
 ```bash
+# 0. (Opcional) Verificar conexión primero
+npm run check:connection
+
 # 1. Cargar datos sintéticos (20 voluntarios con IA aplicada)
 npm run seed:test
 
@@ -40,6 +43,20 @@ npm run test:dashboard
 # O ejecutar todo en secuencia:
 npm run test:all
 ```
+
+### 🔍 Si hay errores de conexión
+
+Si ves errores "fetch failed", ejecuta primero:
+
+```bash
+npm run check:connection
+```
+
+Este script verifica:
+- ✅ Variables de entorno configuradas
+- ✅ Conexión a Supabase
+- ✅ Edge Functions desplegadas
+- ✅ Autenticación funcionando
 
 ---
 

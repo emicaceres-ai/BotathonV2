@@ -7,7 +7,9 @@
     "test:supabase": "node tests-supabase/run-tests.js",
     "seed:test": "node tests-supabase/auto-seed.js",
     "test:dashboard": "node tests-supabase/dashboard-test.js",
-    "test:all": "npm run seed:test && npm run test:supabase && npm run test:dashboard"
+    "test:all": "npm run seed:test && npm run test:supabase && npm run test:dashboard",
+    "check:connection": "node tests-supabase/check-connection.js",
+    "fix:env": "node tests-supabase/fix-env.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, UserPlus, Heart, Menu, X, LogOut } from 'lucide-react';
+import { LayoutDashboard, UserPlus, Heart, Menu, X, LogOut, Search, Settings } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -52,6 +52,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             >
               <LayoutDashboard size={20} />
               <span>Dashboard</span>
+            </Link>
+            
+            <Link 
+              to="/busqueda" 
+              onClick={() => setIsSidebarOpen(false)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/busqueda')}`}
+            >
+              <Search size={20} />
+              <span>Búsqueda/Acción</span>
+            </Link>
+            
+            <Link 
+              to="/admin" 
+              onClick={() => setIsSidebarOpen(false)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/admin')}`}
+            >
+              <Settings size={20} />
+              <span>Administrador</span>
             </Link>
             
             <Link 

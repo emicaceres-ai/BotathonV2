@@ -1,8 +1,10 @@
+// Cargar variables de entorno (Vite usa import.meta.env)
 const SUPABASE_ANON_KEY =
-  // Valor principal: como solicitaste, usando la variable pública de Next.js
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-  // Fallback para entornos Vite (opcional, por si decides usar VITE_)
+  // Prioridad 1: Variable de Vite (VITE_*)
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
+  // Prioridad 2: Variable de Next.js (para compatibilidad)
+  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
+  // Fallback: string vacío
   '';
 
 export const API_CONFIG = {
