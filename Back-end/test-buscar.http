@@ -1,0 +1,37 @@
+### Buscar por región
+GET https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1/buscar?region=RM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468
+Content-Type: application/json
+
+
+### Buscar por habilidad
+GET https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1/buscar?habilidad=IA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468
+Content-Type: application/json
+
+
+### Buscar por campaña
+GET https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1/buscar?campaña=2024
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468
+Content-Type: application/json
+
+
+### Buscar combinando filtros
+GET https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1/buscar?region=RM&habilidad=IA&campaña=2024
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468
+Content-Type: application/json
+
+
+### Insertar voluntario (POST a /voluntarios)
+POST https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1/voluntarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468
+Content-Type: application/json
+
+{
+  "nombre": "Emilio Test",
+  "correo": "emilio@test.cl",
+  "region": "RM",
+  "habilidades": ["IA", "Automatización"],
+  "campañas": ["2024"],
+  "nivel_educacional": "Superior completa"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Teletón Volunteer Manager MVP",
+  "description": "A technical MVP dashboard for managing Teletón volunteers, integrating directly with Supabase Edge Functions.",
+  "requestFramePermissions": []
+}
