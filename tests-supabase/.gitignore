@@ -1,0 +1,9 @@
+# Resultados y screenshots (se generan automáticamente)
+results/*.json
+screenshots/*.png
+screenshots/*.jpg
+
+# Mantener estructura de carpetas
+!results/.gitkeep
+!screenshots/.gitkeep
+

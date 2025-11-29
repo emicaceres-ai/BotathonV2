@@ -1,0 +1,19 @@
+### Variables
+@BASE_URL = https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1
+@ANON_KEY = {{$dotenv NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+
+### Test 1: GET /rpa-accion-urgente - Voluntarios urgentes
+GET {{BASE_URL}}/rpa-accion-urgente
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 2: POST /rpa-accion-urgente - También acepta POST
+POST {{BASE_URL}}/rpa-accion-urgente
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 3: OPTIONS /rpa-accion-urgente - CORS preflight
+OPTIONS {{BASE_URL}}/rpa-accion-urgente
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+

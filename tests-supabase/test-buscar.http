@@ -1,0 +1,54 @@
+### Variables
+@BASE_URL = https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1
+@ANON_KEY = {{$dotenv NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+
+### Test 1: GET /buscar - Sin filtros (todos)
+GET {{BASE_URL}}/buscar
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 2: GET /buscar - Por región
+GET {{BASE_URL}}/buscar?region=Metropolitana
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 3: GET /buscar - Por estado
+GET {{BASE_URL}}/buscar?estado=Activo
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 4: GET /buscar - Por habilidad
+GET {{BASE_URL}}/buscar?habilidad=IA
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 5: GET /buscar - Por campaña
+GET {{BASE_URL}}/buscar?campaña=2024
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 6: GET /buscar - Score mínimo (riesgo alto)
+GET {{BASE_URL}}/buscar?min_score_riesgo=75
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 7: GET /buscar - Con brecha de capacitación
+GET {{BASE_URL}}/buscar?flag_brecha_cap=true
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 8: GET /buscar - Filtros combinados
+GET {{BASE_URL}}/buscar?region=Metropolitana&estado=Activo&min_score_riesgo=50
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 9: GET /buscar - Por programa asignado
+GET {{BASE_URL}}/buscar?programa_asignado=Programa%201
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+### Test 10: GET /buscar - Por rango etario
+GET {{BASE_URL}}/buscar?rango_etario=18-29%20años
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+

@@ -1,0 +1,18 @@
+{
+  "name": "botathonv2-tests",
+  "version": "1.0.0",
+  "description": "Scripts de prueba automatizados para BotathonV2",
+  "type": "module",
+  "scripts": {
+    "test:supabase": "node tests-supabase/run-tests.js",
+    "seed:test": "node tests-supabase/auto-seed.js",
+    "test:dashboard": "node tests-supabase/dashboard-test.js",
+    "test:all": "npm run seed:test && npm run test:supabase && npm run test:dashboard"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "playwright": "^1.48.0"
+  },
+  "devDependencies": {}
+}
+

@@ -1,0 +1,72 @@
+### Variables
+@BASE_URL = https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1
+@ANON_KEY = {{$dotenv NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+
+### Test 1: POST /voluntarios - Voluntario básico
+POST {{BASE_URL}}/voluntarios
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+{
+  "nombre": "Test Automatizado",
+  "correo": "test-auto@test.com",
+  "region": "Metropolitana",
+  "nivel_educacional": "Universitaria"
+}
+
+### Test 2: POST /voluntarios - Con IA (score alto)
+POST {{BASE_URL}}/voluntarios
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+{
+  "nombre": "Test IA Alto Riesgo",
+  "correo": "test-riesgo@test.com",
+  "region": "Valparaíso",
+  "edad": 25,
+  "area_estudio": "SALUD",
+  "tiene_capacitacion": false,
+  "estado": "Receso",
+  "razon_no_continuar": "Falta de Tiempo",
+  "fecha_rechazo_count": 3,
+  "programa_asignado": ""
+}
+
+### Test 3: POST /voluntarios - Con brecha de capacitación
+POST {{BASE_URL}}/voluntarios
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+{
+  "nombre": "Test Brecha Cap",
+  "correo": "test-brecha@test.com",
+  "region": "Biobío",
+  "edad": 30,
+  "area_estudio": "SALUD",
+  "tiene_capacitacion": false,
+  "estado": "Activo"
+}
+
+### Test 4: POST /voluntarios - Error: campos faltantes
+POST {{BASE_URL}}/voluntarios
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+{
+  "nombre": "Test Error"
+}
+
+### Test 5: PUT /voluntarios - Actualizar voluntario
+PUT {{BASE_URL}}/voluntarios
+Authorization: Bearer {{ANON_KEY}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nombre": "Test Actualizado",
+  "correo": "test-auto@test.com",
+  "region": "Metropolitana",
+  "edad": 28,
+  "estado": "Activo"
+}
+

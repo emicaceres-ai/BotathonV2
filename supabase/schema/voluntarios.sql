@@ -17,6 +17,12 @@ CREATE TABLE IF NOT EXISTS voluntarios (
 -- Agregar columnas nuevas si no existen (migración incremental)
 DO $$ 
 BEGIN
+    -- Agregar estado si no existe
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'voluntarios' AND column_name = 'estado') THEN
+        ALTER TABLE voluntarios ADD COLUMN estado VARCHAR(50) DEFAULT 'Activo';
+    END IF;
+
     -- Agregar edad si no existe
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
                    WHERE table_name = 'voluntarios' AND column_name = 'edad') THEN
@@ -80,12 +86,46 @@ END $$;
 
 -- Índices para optimizar búsquedas
 CREATE INDEX IF NOT EXISTS idx_voluntarios_region ON voluntarios(region);
-CREATE INDEX IF NOT EXISTS idx_voluntarios_estado ON voluntarios(estado);
-CREATE INDEX IF NOT EXISTS idx_voluntarios_score_riesgo ON voluntarios(score_riesgo_baja);
-CREATE INDEX IF NOT EXISTS idx_voluntarios_flag_brecha ON voluntarios(flag_brecha_cap);
-CREATE INDEX IF NOT EXISTS idx_voluntarios_area_estudio ON voluntarios(area_estudio);
-CREATE INDEX IF NOT EXISTS idx_voluntarios_programa_asignado ON voluntarios(programa_asignado);
-CREATE INDEX IF NOT EXISTS idx_voluntarios_rango_etario ON voluntarios(rango_etario);
+
+-- Índices condicionales (solo crear si las columnas existen)
+DO $$
+BEGIN
+    -- Índice de estado
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name = 'voluntarios' AND column_name = 'estado') THEN
+        CREATE INDEX IF NOT EXISTS idx_voluntarios_estado ON voluntarios(estado);
+    END IF;
+
+    -- Índice de score_riesgo_baja
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name = 'voluntarios' AND column_name = 'score_riesgo_baja') THEN
+        CREATE INDEX IF NOT EXISTS idx_voluntarios_score_riesgo ON voluntarios(score_riesgo_baja);
+    END IF;
+
+    -- Índice de flag_brecha_cap
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name = 'voluntarios' AND column_name = 'flag_brecha_cap') THEN
+        CREATE INDEX IF NOT EXISTS idx_voluntarios_flag_brecha ON voluntarios(flag_brecha_cap);
+    END IF;
+
+    -- Índice de area_estudio
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name = 'voluntarios' AND column_name = 'area_estudio') THEN
+        CREATE INDEX IF NOT EXISTS idx_voluntarios_area_estudio ON voluntarios(area_estudio);
+    END IF;
+
+    -- Índice de programa_asignado
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name = 'voluntarios' AND column_name = 'programa_asignado') THEN
+        CREATE INDEX IF NOT EXISTS idx_voluntarios_programa_asignado ON voluntarios(programa_asignado);
+    END IF;
+
+    -- Índice de rango_etario
+    IF EXISTS (SELECT 1 FROM information_schema.columns 
+               WHERE table_name = 'voluntarios' AND column_name = 'rango_etario') THEN
+        CREATE INDEX IF NOT EXISTS idx_voluntarios_rango_etario ON voluntarios(rango_etario);
+    END IF;
+END $$;
 
 -- Función para actualizar updated_at automáticamente
 CREATE OR REPLACE FUNCTION update_voluntarios_updated_at()
