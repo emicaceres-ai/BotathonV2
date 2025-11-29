@@ -5,25 +5,26 @@
 // Función helper para obtener variables de entorno de forma segura
 function getEnvVar(key: string, fallback: string = ''): string {
   // En Vite, las variables con prefijo NEXT_PUBLIC_ o VITE_ están disponibles en import.meta.env
+  // Durante el build, Vite reemplaza import.meta.env.* con los valores reales
   if (typeof import.meta !== 'undefined' && import.meta.env) {
-    // Intentar con el nombre exacto primero
+    // Intentar con el nombre exacto primero (NEXT_PUBLIC_*)
     let value = import.meta.env[key];
-    if (value && typeof value === 'string' && value.trim()) {
+    if (value && typeof value === 'string' && value.trim() && value !== 'undefined') {
       return value;
     }
     
-    // Intentar con VITE_ prefix
+    // Intentar con VITE_ prefix como alternativa
     const viteKey = key.replace('NEXT_PUBLIC_', 'VITE_');
     value = import.meta.env[viteKey];
-    if (value && typeof value === 'string' && value.trim()) {
+    if (value && typeof value === 'string' && value.trim() && value !== 'undefined') {
       return value;
     }
   }
   
-  // Fallback para process.env (útil en algunos contextos)
+  // Fallback para process.env (útil en algunos contextos de build)
   if (typeof process !== 'undefined' && process.env) {
     const value = process.env[key];
-    if (value && typeof value === 'string' && value.trim()) {
+    if (value && typeof value === 'string' && value.trim() && value !== 'undefined') {
       return value;
     }
   }
