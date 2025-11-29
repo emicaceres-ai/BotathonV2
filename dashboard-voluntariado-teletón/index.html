@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gesto Activo - Dashboard Teletón</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom High Contrast Utilities */
+        .high-contrast {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-highlight: #ffff00; /* Yellow for high visibility */
+            --accent: #00ffff; /* Cyan for actions */
+            --border: #ffffff;
+        }
+        
+        .high-contrast .bg-white { background-color: var(--bg-secondary) !important; color: var(--text-primary) !important; }
+        .high-contrast .bg-gray-50 { background-color: var(--bg-primary) !important; }
+        .high-contrast .bg-gray-100 { background-color: var(--bg-secondary) !important; }
+        .high-contrast .text-gray-900 { color: var(--text-primary) !important; }
+        .high-contrast .text-gray-600 { color: #dddddd !important; }
+        .high-contrast .text-gray-500 { color: #cccccc !important; }
+        .high-contrast .border-gray-200 { border-color: var(--border) !important; border-width: 2px !important; }
+        
+        /* Specific overrides for accessibility */
+        .high-contrast button { border: 2px solid white !important; }
+        .high-contrast .hc-text-yellow { color: var(--text-highlight) !important; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
