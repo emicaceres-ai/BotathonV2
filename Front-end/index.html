@@ -24,6 +24,17 @@
 </head>
   <body>
     <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Prevenir carga de BluePrism en producción
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        // Bloquear cualquier intento de cargar bluePrismPlugin en producción
+        Object.defineProperty(window, 'bluePrismPlugin', {
+          get: function() { return undefined; },
+          set: function() { return; },
+          configurable: false
+        });
+      }
+    </script>
 </body>
 </html>

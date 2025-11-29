@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  // Exponer variables de entorno con prefijo VITE_ (estándar de Vite)
-  envPrefix: ['VITE_'],
+  // Exponer variables de entorno con prefijos VITE_ y NEXT_PUBLIC_ para compatibilidad
+  envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
   },
@@ -23,6 +23,7 @@ export default defineConfig({
     sourcemap: false,
     minify: 'esbuild',
     cssCodeSplit: true,
+    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: (id) => {
