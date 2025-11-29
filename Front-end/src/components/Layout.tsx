@@ -30,7 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     ${isActive 
       ? (isHighContrast 
           ? 'bg-gray-800 text-yellow-400 border-yellow-400' 
-          : 'bg-red-50 text-[#D6001C] border-[#D6001C]') 
+          : '') 
       : (isHighContrast 
           ? 'text-gray-400 border-transparent hover:text-white hover:bg-gray-900' 
           : 'text-gray-500 border-transparent hover:bg-gray-50 hover:text-[#5C2D91]')
@@ -38,44 +38,73 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   `;
 
   return (
-    <div className={`flex min-h-screen ${isHighContrast ? 'bg-black text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`flex min-h-screen ${isHighContrast ? 'bg-black text-white' : ''}`} style={{ backgroundColor: isHighContrast ? '#000000' : 'var(--t-gray-light)' }}>
       {/* Sidebar */}
       <div className={baseClass}>
         {/* Brand Logo */}
         <div className={`h-20 flex items-center px-6 border-b ${isHighContrast ? 'border-white' : 'border-gray-100'}`}>
-          <div className={`p-2 rounded-full mr-3 ${isHighContrast ? 'bg-white text-black' : 'bg-[#D6001C] text-white'}`}>
+          <div className={`p-2 rounded-full mr-3 ${isHighContrast ? 'bg-white text-black' : ''}`} style={{ backgroundColor: isHighContrast ? '#FFFFFF' : 'var(--t-red)', color: isHighContrast ? '#000000' : '#FFFFFF' }}>
             <Heart className="h-5 w-5 fill-current" />
           </div>
           <div>
-            <h1 className={`text-lg font-extrabold leading-none ${isHighContrast ? 'text-white' : 'text-[#1A1A1A]'}`}>TELETÓN</h1>
-            <span className={`text-[10px] uppercase font-bold tracking-widest ${isHighContrast ? 'text-yellow-400' : 'text-[#5C2D91]'}`}>Voluntariado</span>
+            <h1 className={`text-lg font-extrabold leading-none ${isHighContrast ? 'text-white' : ''}`} style={{ color: isHighContrast ? '#FFFFFF' : 'var(--t-gray-dark)' }}>TELETÓN</h1>
+            <span className={`text-[10px] uppercase font-bold tracking-widest ${isHighContrast ? 'text-yellow-400' : ''}`} style={{ color: isHighContrast ? '#FFFF00' : 'var(--t-purple)' }}>Voluntariado</span>
           </div>
         </div>
 
         {/* Main Navigation */}
         <nav className="flex-1 py-6 space-y-1">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => navigate(item.id)}
-              className={itemClass(location.pathname === item.id || (item.id === '/dashboard' && location.pathname === '/'))}
-              aria-current={location.pathname === item.id ? 'page' : undefined}
-            >
-              <item.icon className="w-5 h-5 mr-3" />
-              {item.label}
-            </button>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = location.pathname === item.id || (item.id === '/dashboard' && location.pathname === '/');
+            return (
+              <button
+                key={item.id}
+                onClick={() => navigate(item.id)}
+                className={itemClass(isActive)}
+                style={!isHighContrast && isActive ? {
+                  backgroundColor: 'rgba(230, 0, 38, 0.1)',
+                  color: 'var(--t-red)',
+                  borderLeftColor: 'var(--t-red)'
+                } : !isHighContrast ? {
+                  color: 'var(--t-gray-dark)'
+                } : {}}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <item.icon className="w-5 h-5 mr-3" />
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Quick Action */}
         <div className="px-6 pb-6">
           <button
             onClick={() => navigate('/voluntarios/nuevo')}
-            className={`w-full flex items-center justify-center px-4 py-3 rounded-xl font-bold text-sm shadow-md transition-transform active:scale-95 ${
+            className={`w-full flex items-center justify-center px-4 py-3 font-bold text-sm transition-all active:scale-95 ${
               isHighContrast
                 ? 'bg-transparent border-2 border-green-400 text-green-400 hover:bg-green-400 hover:text-black'
-                : 'bg-[#00A499] text-white hover:bg-[#008f85]'
+                : 'text-white'
             }`}
+            style={!isHighContrast ? {
+              backgroundColor: 'var(--t-red)',
+              borderRadius: 'var(--radius-normal)',
+              boxShadow: 'var(--shadow-card)',
+            } : {
+              borderRadius: 'var(--radius-normal)',
+            }}
+            onMouseEnter={(e) => {
+              if (!isHighContrast) {
+                e.currentTarget.style.backgroundColor = 'var(--t-red-dark)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-soft)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isHighContrast) {
+                e.currentTarget.style.backgroundColor = 'var(--t-red)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+              }
+            }}
           >
             <PlusCircle className="w-5 h-5 mr-2" />
             Nuevo Voluntario
@@ -85,7 +114,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* User / Footer */}
         <div className={`p-6 border-t ${isHighContrast ? 'border-white bg-black' : 'border-gray-100 bg-gray-50'}`}>
           <div className="flex items-center">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${isHighContrast ? 'bg-white text-black' : 'bg-[#5C2D91] text-white'}`}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${isHighContrast ? 'bg-white text-black' : ''}`} style={{ backgroundColor: isHighContrast ? '#FFFFFF' : 'var(--t-purple)', color: isHighContrast ? '#000000' : '#FFFFFF' }}>
               AD
             </div>
             <div className="ml-3">
@@ -115,7 +144,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </header>
 
-        <main className="p-8 flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto" style={{ padding: '24px', backgroundColor: 'var(--t-gray-light)' }}>
           {children}
         </main>
       </div>

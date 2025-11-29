@@ -36,11 +36,18 @@ export const HABILIDADES_COMUNES = [
 ];
 
 export const COLORS = {
-  teletonRed: '#D6001C',
-  teletonPurple: '#5C2D91',
-  teletonDark: '#1A1A1A',
-  chartSafe: ['#D6001C', '#5C2D91', '#FFB81C', '#00A499', '#707070'],
+  // Paleta Oficial Teletón Chile
+  teletonRed: '#E60026',
+  teletonRedDark: '#B5001D',
+  teletonYellow: '#FFC20E',
+  teletonGreen: '#009E73',
+  teletonPurple: '#5A2D82',
+  teletonGrayDark: '#3A3A3A',
+  teletonGrayLight: '#F5F5F7',
+  teletonWhite: '#FFFFFF',
+  // Colores para gráficos (paleta Teletón)
+  chartSafe: ['#E60026', '#5A2D82', '#FFC20E', '#009E73', '#3A3A3A'],
   highContrast: ['#FFFFFF', '#FFFF00', '#00FFFF', '#FF00FF', '#00FF00'],
-  motivation: ['#D6001C', '#FFB81C', '#5C2D91', '#00A499']
+  motivation: ['#E60026', '#FFC20E', '#5A2D82', '#009E73']
 };
 

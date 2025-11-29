@@ -1,0 +1,127 @@
+/**
+ * Paleta Oficial Teletón Chile
+ * Variables CSS para identidad visual institucional
+ */
+
+:root {
+  /* Colores Principales Teletón */
+  --t-red: #E60026;
+  --t-red-dark: #B5001D;
+  --t-yellow: #FFC20E;
+  --t-green: #009E73;
+  --t-purple: #5A2D82;
+  --t-gray-dark: #3A3A3A;
+  --t-gray-light: #F5F5F7;
+  --t-white: #FFFFFF;
+
+  /* Radios de Borde */
+  --radius-large: 20px;
+  --radius-normal: 14px;
+  --radius-small: 10px;
+
+  /* Sombras Suaves */
+  --shadow-soft: 0 6px 16px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 3px 10px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Transiciones */
+  --transition-smooth: all 0.25s ease-in-out;
+  --transition-fast: all 0.2s ease-in-out;
+}
+
+/* Aplicar paleta a variables globales */
+:root {
+  --teleton-red: var(--t-red);
+  --teleton-red-dark: var(--t-red-dark);
+  --teleton-yellow: var(--t-yellow);
+  --teleton-green: var(--t-green);
+  --teleton-purple: var(--t-purple);
+  --teleton-gray-dark: var(--t-gray-dark);
+  --teleton-gray-light: var(--t-gray-light);
+  --teleton-white: var(--t-white);
+}
+
+/* Clases utilitarias Teletón */
+.t-bg-red {
+  background-color: var(--t-red);
+}
+
+.t-bg-red-dark {
+  background-color: var(--t-red-dark);
+}
+
+.t-bg-yellow {
+  background-color: var(--t-yellow);
+}
+
+.t-bg-green {
+  background-color: var(--t-green);
+}
+
+.t-bg-purple {
+  background-color: var(--t-purple);
+}
+
+.t-bg-gray-light {
+  background-color: var(--t-gray-light);
+}
+
+.t-text-red {
+  color: var(--t-red);
+}
+
+.t-text-red-dark {
+  color: var(--t-red-dark);
+}
+
+.t-text-yellow {
+  color: var(--t-yellow);
+}
+
+.t-text-green {
+  color: var(--t-green);
+}
+
+.t-text-purple {
+  color: var(--t-purple);
+}
+
+.t-text-gray-dark {
+  color: var(--t-gray-dark);
+}
+
+/* Bordes redondeados */
+.t-radius-large {
+  border-radius: var(--radius-large);
+}
+
+.t-radius-normal {
+  border-radius: var(--radius-normal);
+}
+
+.t-radius-small {
+  border-radius: var(--radius-small);
+}
+
+/* Sombras */
+.t-shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.t-shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.t-shadow-hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Transiciones */
+.t-transition {
+  transition: var(--transition-smooth);
+}
+
+.t-transition-fast {
+  transition: var(--transition-fast);
+}
+

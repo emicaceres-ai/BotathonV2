@@ -19,9 +19,9 @@ const REGIONAL_DATA = [
 const TALENT_DISTRIBUTION = [
   { name: 'Salud', value: 41, color: COLORS.teletonRed },
   { name: 'Educación', value: 14, color: COLORS.teletonPurple },
-  { name: 'Sociales', value: 11, color: '#FFB81C' },
-  { name: 'Ingeniería', value: 7, color: '#00A499' },
-  { name: 'Otros', value: 27, color: '#707070' },
+  { name: 'Sociales', value: 11, color: COLORS.teletonYellow },
+  { name: 'Ingeniería', value: 7, color: COLORS.teletonGreen },
+  { name: 'Otros', value: 27, color: COLORS.teletonGrayDark },
 ];
 
 const MOTIVATION_DATA = [
@@ -45,7 +45,7 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
     );
   };
 
-  const containerClass = `rounded-2xl p-6 border shadow-md hover:shadow-lg transition-all duration-300 ${
+  const containerClass = `p-6 border transition-all duration-300 hover:-translate-y-1 ${
     isHighContrast ? 'bg-black border-white border-2' : 'bg-white border-gray-200'
   }`;
 
@@ -53,7 +53,23 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
     <div className="space-y-8 mb-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Map Heatmap Table */}
-        <div className={containerClass}>
+        <div 
+          className={containerClass}
+          style={{
+            borderRadius: isHighContrast ? '20px' : 'var(--radius-large)',
+            boxShadow: isHighContrast ? 'none' : 'var(--shadow-card)',
+          }}
+          onMouseEnter={(e) => {
+            if (!isHighContrast) {
+              e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isHighContrast) {
+              e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+            }
+          }}
+        >
           <h3 className={`text-xl font-bold mb-2 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`} aria-label="Representatividad Regional por Instituto">
             Representatividad Regional
           </h3>
@@ -65,12 +81,15 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
               <div key={region.name} className="relative group" tabIndex={0} aria-label={`Región ${region.name}, ${region.value}% representatividad`}>
                 <div className="flex justify-between text-sm font-medium mb-1.5">
                   <span className={isHighContrast ? 'text-white' : 'text-gray-700'}>{region.name}</span>
-                  <span className={`font-bold ${isHighContrast ? 'hc-text-yellow' : 'text-[#5C2D91]'}`}>{region.value}%</span>
+                  <span className={`font-bold ${isHighContrast ? 'hc-text-yellow' : ''}`} style={{ color: isHighContrast ? '#FFFF00' : 'var(--t-purple)' }}>{region.value}%</span>
                 </div>
                 <div className={`w-full h-2.5 rounded-full ${isHighContrast ? 'bg-gray-800 border border-white' : 'bg-gray-100'}`}>
                   <div 
-                    className={`h-2.5 rounded-full transition-all duration-500 ${isHighContrast ? 'bg-white' : (region.value < 50 ? 'bg-[#D6001C]' : 'bg-[#5C2D91]')}`}
-                    style={{ width: `${Math.min(region.value, 100)}%` }}
+                    className={`h-2.5 rounded-full transition-all duration-500 ${isHighContrast ? 'bg-white' : ''}`}
+                    style={{ 
+                      width: `${Math.min(region.value, 100)}%`,
+                      backgroundColor: isHighContrast ? '#FFFFFF' : (region.value < 50 ? 'var(--t-red)' : 'var(--t-purple)')
+                    }}
                   ></div>
                 </div>
               </div>
@@ -79,7 +98,23 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
         </div>
 
         {/* Donut Chart */}
-        <div className={`${containerClass} flex flex-col items-center`}>
+        <div 
+          className={`${containerClass} flex flex-col items-center`}
+          style={{
+            borderRadius: isHighContrast ? '20px' : 'var(--radius-large)',
+            boxShadow: isHighContrast ? 'none' : 'var(--shadow-card)',
+          }}
+          onMouseEnter={(e) => {
+            if (!isHighContrast) {
+              e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isHighContrast) {
+              e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+            }
+          }}
+        >
           <div className="w-full text-left mb-4">
             <h3 className={`text-xl font-bold mb-2 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`} aria-label="Distribución de Perfil Académico">
               Perfil Académico
@@ -125,7 +160,23 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
       </div>
 
       {/* Bar Chart */}
-      <div className={containerClass}>
+      <div 
+        className={containerClass}
+        style={{
+          borderRadius: isHighContrast ? '20px' : 'var(--radius-large)',
+          boxShadow: isHighContrast ? 'none' : 'var(--shadow-card)',
+        }}
+        onMouseEnter={(e) => {
+          if (!isHighContrast) {
+            e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isHighContrast) {
+            e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+          }
+        }}
+      >
         <h3 className={`text-xl font-bold mb-2 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`} aria-label="Motivaciones para el Ingreso al Voluntariado">
           Motivaciones para el Ingreso
         </h3>
@@ -151,7 +202,7 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
                 contentStyle={{ backgroundColor: isHighContrast ? '#000' : '#fff', borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
                 itemStyle={{color: isHighContrast ? '#fff' : '#333'}} 
               />
-              <Bar dataKey="value" fill={isHighContrast ? '#ffff00' : '#D6001C'} radius={[0, 4, 4, 0]} barSize={24} />
+              <Bar dataKey="value" fill={isHighContrast ? '#ffff00' : 'var(--t-red)'} radius={[0, 10, 10, 0]} barSize={24} />
             </BarChart>
           </ResponsiveContainer>
         </div>

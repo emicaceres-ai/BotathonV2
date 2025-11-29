@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./theme.css";
+@import "./theme-teletón.css";
 
 /**
  * Estilos Globales - Teletón Voluntariado
@@ -25,6 +26,9 @@ body {
   font-family: var(--font-family-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--t-gray-light);
+  color: var(--t-gray-dark);
+  line-height: 1.6;
 }
 
 /* ============================================
@@ -160,54 +164,70 @@ body {
   transform: translateY(-2px);
 }
 
-/* Botones Modernos */
+/* Botones Modernos Teletón */
 .btn-modern {
-  padding: 12px 24px;
-  border-radius: var(--border-radius-lg);
+  padding: 12px 22px;
+  border-radius: var(--radius-normal);
   font-weight: 600;
   font-size: var(--font-size-base);
-  transition: all var(--transition-base);
+  transition: var(--transition-smooth);
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: var(--min-button-height);
+  min-height: 44px;
+  line-height: 1.5;
 }
 
 .btn-modern:focus {
-  outline: 3px solid #007bff;
+  outline: 3px solid var(--t-red);
   outline-offset: 2px;
 }
 
 .btn-modern:hover {
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-modern:active {
   transform: translateY(0);
 }
 
-/* Botón Primario */
+/* Botón Primario Teletón */
 .btn-primary {
-  background: linear-gradient(135deg, var(--teleton-red) 0%, #b80018 100%);
+  background: var(--t-red);
   color: white;
+  box-shadow: var(--shadow-card);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #b80018 0%, #9a0014 100%);
+  background: var(--t-red-dark);
+  box-shadow: var(--shadow-soft);
 }
 
-/* Botón Secundario */
+/* Botón Secundario Teletón */
 .btn-secondary {
-  background: var(--teleton-purple);
+  background: var(--t-purple);
   color: white;
+  box-shadow: var(--shadow-card);
 }
 
 .btn-secondary:hover {
   background: #4a1f73;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Botón Terciario (Verde) */
+.btn-tertiary {
+  background: var(--t-green);
+  color: white;
+  box-shadow: var(--shadow-card);
+}
+
+.btn-tertiary:hover {
+  background: #007a5e;
+  box-shadow: var(--shadow-soft);
 }
 
 /* Inputs Modernos */
