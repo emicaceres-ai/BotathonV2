@@ -5,8 +5,11 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   // Exponer variables de entorno con prefijo VITE_ (estándar de Vite)
-  // Vite expone automáticamente las variables con prefijo VITE_ en import.meta.env
   envPrefix: ['VITE_'],
+  define: {},
+  css: {
+    devSourcemap: true
+  },
   server: {
     port: 5173,
     host: '0.0.0.0',
@@ -37,7 +40,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, './src'),
     }
   }
 });
