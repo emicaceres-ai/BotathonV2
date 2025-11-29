@@ -20,9 +20,7 @@ export default function SearchPage() {
   const fetchVolunteers = async () => {
     setLoading(true);
     try {
-      const anonKey = API_CONFIG.ANON_KEY || 
-                      (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-                      '';
+      const anonKey = API_CONFIG.ANON_KEY;
       
       if (!anonKey) {
         throw new Error('Error de configuración');
@@ -88,9 +86,7 @@ export default function SearchPage() {
   const handleRPAAction = async (type: 'retencion' | 'capacitacion') => {
     setRpaLoading(type);
     try {
-      const anonKey = API_CONFIG.ANON_KEY || 
-                      (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-                      '';
+      const anonKey = API_CONFIG.ANON_KEY;
 
       let url = '';
       if (type === 'retencion') {

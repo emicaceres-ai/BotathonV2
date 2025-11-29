@@ -41,13 +41,10 @@ export default function DashboardPage() {
     setError(null);
     try {
       // Usamos el endpoint real de Supabase y el header de autorización solicitado
-      const anonKey = API_CONFIG.ANON_KEY || 
-                      (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-                      (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
-                      '';
+      const anonKey = API_CONFIG.ANON_KEY;
       
       if (!anonKey) {
-        throw new Error('Error de configuración: No se encontró la clave de autenticación. Verifica .env.local');
+        throw new Error('Error de configuración: No se encontró la clave de autenticación. Verifica las variables de entorno en Vercel.');
       }
 
       const response = await fetch(`${API_CONFIG.BASE_URL}/buscar`, {

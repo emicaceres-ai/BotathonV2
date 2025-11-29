@@ -1,20 +1,33 @@
 // Cargar variables de entorno (Vite usa import.meta.env)
-// En Vercel, las variables NEXT_PUBLIC_* están disponibles en import.meta.env
-const SUPABASE_ANON_KEY =
-  // Prioridad 1: Variable de Vercel/Next.js (NEXT_PUBLIC_*)
-  (typeof import.meta !== 'undefined' && import.meta.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-  // Prioridad 2: Variable de Vite (VITE_*)
-  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
-  // Prioridad 3: Variable de process.env (fallback)
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-  // Fallback: string vacío
-  '';
+// En Vercel, las variables NEXT_PUBLIC_* están disponibles en import.meta.env durante el build
+// Durante runtime, Vite expone estas variables automáticamente si están en envPrefix
 
-const SUPABASE_URL =
-  (typeof import.meta !== 'undefined' && import.meta.env?.NEXT_PUBLIC_SUPABASE_URL) ||
-  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) ||
-  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_URL) ||
-  'https://tatvmyjoinyfkxeclbso.supabase.co';
+// Función helper para obtener variables de entorno de forma segura
+function getEnvVar(key: string, fallback: string = ''): string {
+  // En Vite, las variables con prefijo NEXT_PUBLIC_ o VITE_ están disponibles en import.meta.env
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    const value = import.meta.env[key] || import.meta.env[`VITE_${key.replace('NEXT_PUBLIC_', '')}`];
+    if (value) return value;
+  }
+  
+  // Fallback para process.env (útil en algunos contextos)
+  if (typeof process !== 'undefined' && process.env) {
+    const value = process.env[key];
+    if (value) return value;
+  }
+  
+  return fallback;
+}
+
+const SUPABASE_ANON_KEY = getEnvVar(
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468'
+);
+
+const SUPABASE_URL = getEnvVar(
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'https://tatvmyjoinyfkxeclbso.supabase.co'
+);
 
 export const API_CONFIG = {
   // Base URL corregida al project ID real de Supabase

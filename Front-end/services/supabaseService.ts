@@ -11,7 +11,7 @@ export const createVolunteer = async (volunteer: Volunteer): Promise<{ success: 
       headers: {
         'Content-Type': 'application/json',
         // Header tal como lo definiste en el prompt
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer ${API_CONFIG.ANON_KEY}`
       },
       body: JSON.stringify(volunteer)
     });
@@ -48,7 +48,7 @@ export const searchVolunteers = async (filters: SearchFilters): Promise<Voluntee
       method: 'GET',
       headers: {
         // Header tal como lo definiste en el prompt
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${API_CONFIG.ANON_KEY}`,
         'Accept': 'application/json'
       }
     });

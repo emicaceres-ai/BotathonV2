@@ -56,14 +56,12 @@ export default function Page() {
       payload.campanas = campanas;
     }
 
-    // Obtener la anon key de API_CONFIG o usar fallback
-    const anonKey = API_CONFIG.ANON_KEY || 
-                    (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhdHZteWpvaW55Zmt4ZWNsYnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNzYyNDQsImV4cCI6MjA3OTk1MjI0NH0.F-BcU63qt1IvgyLA53IUjjC5gux-79qiCYt_8L6D468';
+    // Obtener la anon key de API_CONFIG (tiene fallback en constants.ts)
+    const anonKey = API_CONFIG.ANON_KEY;
 
     if (!anonKey) {
       setStatus('error');
-      setErrorMessage('Error de configuración: No se encontró la clave de autenticación. Contacta al administrador.');
+      setErrorMessage('Error de configuración: No se encontró la clave de autenticación. Verifica las variables de entorno en Vercel.');
       return;
     }
 

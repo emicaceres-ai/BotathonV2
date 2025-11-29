@@ -82,13 +82,11 @@ export default function VolunteerModal({ isOpen, onClose, onSuccess }: Volunteer
       payload.campanas = campanas;
     }
 
-    const anonKey = API_CONFIG.ANON_KEY || 
-                    (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ||
-                    '';
+    const anonKey = API_CONFIG.ANON_KEY;
 
     if (!anonKey) {
       setStatus('error');
-      setErrorMessage('Error de configuración: No se encontró la clave de autenticación.');
+      setErrorMessage('Error de configuración: No se encontró la clave de autenticación. Verifica las variables de entorno en Vercel.');
       return;
     }
 
