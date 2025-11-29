@@ -1,30 +1,14 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Volunteer } from '../types';
-
-// Validar y obtener la clave de API de Gemini
-const getApiKey = (): string | null => {
-  const key = import.meta.env.VITE_GEMINI_API_KEY;
-  
-  // Console.log seguro solo en desarrollo
-  if (import.meta.env.DEV) {
-    if (key) {
-      console.log('✅ Gemini API Key cargada correctamente');
-    } else {
-      console.warn('⚠️ VITE_GEMINI_API_KEY no está configurada');
-    }
-  }
-  
-  return key || null;
-};
+import { env } from '../config/env';
 
 // Inicializar GoogleGenerativeAI solo si hay API key
 let genAI: GoogleGenerativeAI | null = null;
 let model: any = null;
 
-const apiKey = getApiKey();
-if (apiKey) {
+if (env.geminiApiKey) {
   try {
-    genAI = new GoogleGenerativeAI(apiKey);
+    genAI = new GoogleGenerativeAI(env.geminiApiKey);
     model = genAI.getGenerativeModel({ model: 'gemini-pro' });
   } catch (error) {
     console.error('Error inicializando Gemini:', error);
@@ -42,7 +26,7 @@ export const geminiService = {
   async generateInsight(highRiskVolunteers: Volunteer[], gapVolunteers: Volunteer[]): Promise<string> {
     try {
       // Verificar que la API key y el modelo están disponibles
-      if (!model || !import.meta.env.VITE_GEMINI_API_KEY) {
+      if (!model || !env.geminiApiKey) {
         return '⚠️ Gemini AI no está configurado. Por favor configura VITE_GEMINI_API_KEY en Vercel → Settings → Environment Variables.';
       }
 
@@ -64,7 +48,7 @@ export const geminiService = {
       console.error('Error generating insight:', error);
       // Fallback visual adecuado
       if (error.message?.includes('API_KEY') || error.message?.includes('API key')) {
-        return '⚠️ Error de configuración: VITE_GEMINI_API_KEY no está configurada correctamente en Vercel.';
+        return '⚠️ Error de configuración: VITE_GEMINI_API_KEY no está configurada correctamente. Verifica la variable en Vercel → Settings → Environment Variables.';
       }
       return 'Error al conectar con el servicio de inteligencia. Por favor verifica la configuración.';
     }
@@ -74,8 +58,8 @@ export const geminiService = {
   async generateVolunteerSummary(volunteer: Volunteer): Promise<string> {
     try {
       // Verificar que la API key y el modelo están disponibles
-      if (!model || !import.meta.env.VITE_GEMINI_API_KEY) {
-        return '⚠️ Gemini AI no está configurado.';
+      if (!model || !env.geminiApiKey) {
+        return '⚠️ Gemini AI no está configurado. Configura VITE_GEMINI_API_KEY en Vercel.';
       }
 
       const prompt = `
@@ -95,7 +79,7 @@ export const geminiService = {
     } catch (error: any) {
       console.error('Error generating summary:', error);
       if (error.message?.includes('API_KEY') || error.message?.includes('API key')) {
-        return '⚠️ Error de configuración: VITE_GEMINI_API_KEY no está configurada.';
+        return '⚠️ Error de configuración: VITE_GEMINI_API_KEY no está configurada. Verifica la variable en Vercel.';
       }
       return 'Error al generar resumen.';
     }
