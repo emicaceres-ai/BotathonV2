@@ -1,5 +1,18 @@
 -- Esquema de Base de Datos para Sistema de Inteligencia Predictiva de Voluntariado - Teletón
 -- Compatible con Supabase PostgreSQL y Edge Functions existentes
+-- IMPORTANTE: Esta migración es incremental y NO borra datos existentes
+
+-- Verificar que la tabla voluntarios existe (si no existe, crearla primero)
+CREATE TABLE IF NOT EXISTS voluntarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(200) NOT NULL,
+    correo VARCHAR(200),
+    region VARCHAR(100) NOT NULL,
+    habilidades TEXT[],
+    campañas TEXT[],
+    nivel_educacional VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Agregar columnas nuevas si no existen (migración incremental)
 DO $$ 
