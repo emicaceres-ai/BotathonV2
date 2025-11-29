@@ -1,0 +1,10 @@
+POST https://tatvmyjoinyfkxeclbso.supabase.co/functions/v1/voluntarios
+Authorization: Bearer {{NEXT_PUBLIC_SUPABASE_ANON_KEY}}
+Content-Type: application/json
+
+{
+  "nombre": "Tester",
+  "correo": "tester@correo.cl"
+}
+
+
