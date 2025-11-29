@@ -45,8 +45,8 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
     );
   };
 
-  const containerClass = `rounded-xl p-6 border shadow-sm ${
-    isHighContrast ? 'bg-black border-white' : 'bg-white border-gray-100'
+  const containerClass = `rounded-2xl p-6 border shadow-md hover:shadow-lg transition-all duration-300 ${
+    isHighContrast ? 'bg-black border-white border-2' : 'bg-white border-gray-200'
   }`;
 
   return (
@@ -54,10 +54,10 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Map Heatmap Table */}
         <div className={containerClass}>
-          <h3 className={`text-lg font-bold mb-1 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`}>
+          <h3 className={`text-xl font-bold mb-2 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`} aria-label="Representatividad Regional por Instituto">
             Representatividad Regional
           </h3>
-          <p className={`text-xs mb-5 ${isHighContrast ? 'text-white' : 'text-gray-500'}`}>
+          <p className={`text-sm mb-6 ${isHighContrast ? 'text-white' : 'text-gray-600'}`}>
             Encuesta 2024 - Destacan Puerto Montt (101%) y Arica (90%).
           </p>
           <div className="space-y-4 h-64 overflow-y-auto pr-2 custom-scrollbar">
@@ -81,10 +81,10 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
         {/* Donut Chart */}
         <div className={`${containerClass} flex flex-col items-center`}>
           <div className="w-full text-left mb-4">
-            <h3 className={`text-lg font-bold mb-1 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`}>
+            <h3 className={`text-xl font-bold mb-2 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`} aria-label="Distribución de Perfil Académico">
               Perfil Académico
             </h3>
-            <p className={`text-xs ${isHighContrast ? 'text-white' : 'text-gray-500'}`}>Dominio Salud (41%) y Educación (14%)</p>
+            <p className={`text-sm ${isHighContrast ? 'text-white' : 'text-gray-600'}`}>Dominio Salud (41%) y Educación (14%)</p>
           </div>
           
           <div className="w-full h-64 min-h-[256px]" aria-label="Gráfico de dona mostrando distribución de áreas de estudio">
@@ -126,10 +126,10 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
 
       {/* Bar Chart */}
       <div className={containerClass}>
-        <h3 className={`text-lg font-bold mb-1 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`}>
+        <h3 className={`text-xl font-bold mb-2 ${isHighContrast ? 'hc-text-yellow' : 'text-[#1A1A1A]'}`} aria-label="Motivaciones para el Ingreso al Voluntariado">
           Motivaciones para el Ingreso
         </h3>
-        <p className={`text-xs mb-4 ${isHighContrast ? 'text-white' : 'text-gray-500'}`}>Principales razones declaradas en la encuesta</p>
+        <p className={`text-sm mb-6 ${isHighContrast ? 'text-white' : 'text-gray-600'}`}>Principales razones declaradas en la encuesta</p>
         <div className="w-full h-64 min-h-[256px]">
           <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={256}>
             <BarChart

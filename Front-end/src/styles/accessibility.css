@@ -1,8 +1,11 @@
-/* ============================================
-   ESTILOS DE ACCESIBILIDAD GLOBALES
-   ============================================ */
+/**
+ * ESTILOS DE ACCESIBILIDAD GLOBALES
+ * Teletón - Sistema de Accesibilidad WCAG 2.1 AA+
+ */
 
-/* Alto Contraste Extremo (WCAG AAA - 7:1) */
+/* ============================================
+   ALTO CONTRASTE EXTREMO (WCAG AAA - 7:1)
+   ============================================ */
 .accessibility-high-contrast,
 .accessibility-high-contrast * {
   background-color: #000000 !important;
@@ -17,11 +20,20 @@
 .accessibility-high-contrast textarea {
   background-color: #000000 !important;
   color: #FFFFFF !important;
-  border: 2px solid #FFFFFF !important;
-  box-shadow: none !important;
+  border: 3px solid #FFFFFF !important;
+  box-shadow: 0 0 0 2px #FFFF00 !important;
 }
 
-.accessibility-high-contrast .bg-white {
+.accessibility-high-contrast button:hover,
+.accessibility-high-contrast a:hover {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  border-color: #FFFF00 !important;
+}
+
+.accessibility-high-contrast .bg-white,
+.accessibility-high-contrast .bg-gray-50,
+.accessibility-high-contrast .bg-gray-100 {
   background-color: #000000 !important;
 }
 
@@ -37,33 +49,280 @@
 .accessibility-high-contrast .border-gray-200,
 .accessibility-high-contrast .border-gray-300 {
   border-color: #FFFFFF !important;
+  border-width: 2px !important;
 }
 
-/* Esquema Daltónico Amigable */
-.accessibility-colorblind .recharts-surface .recharts-pie-sector {
-  /* Aplicar patrones o colores específicos */
+.accessibility-high-contrast .hc-text-yellow {
+  color: #FFFF00 !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Navegación por Teclado Mejorada */
+/* ============================================
+   MODO DALTÓNICO AMIGABLE
+   ============================================ */
+.accessibility-colorblind {
+  /* Reemplazar rojos/verdes por azules/naranjas */
+}
+
+.accessibility-colorblind .bg-red-500,
+.accessibility-colorblind .bg-red-600,
+.accessibility-colorblind .bg-[#D6001C] {
+  background-color: #0066cc !important; /* Azul */
+}
+
+.accessibility-colorblind .text-red-500,
+.accessibility-colorblind .text-red-600 {
+  color: #0066cc !important; /* Azul */
+}
+
+/* Clase específica para color Teletón rojo */
+.accessibility-colorblind [class*="text-\\[\\#D6001C\\]"] {
+  color: #0066cc !important; /* Azul */
+}
+
+.accessibility-colorblind .bg-green-500,
+.accessibility-colorblind .bg-green-600 {
+  background-color: #ff6600 !important; /* Naranja */
+}
+
+.accessibility-colorblind .text-green-500,
+.accessibility-colorblind .text-green-600 {
+  color: #ff6600 !important; /* Naranja */
+}
+
+/* Gráficos con patrones para daltónicos */
+.accessibility-colorblind .recharts-surface .recharts-pie-sector:nth-child(1) {
+  fill: #0066cc !important; /* Azul */
+}
+
+.accessibility-colorblind .recharts-surface .recharts-pie-sector:nth-child(2) {
+  fill: #ff6600 !important; /* Naranja */
+}
+
+.accessibility-colorblind .recharts-surface .recharts-pie-sector:nth-child(3) {
+  fill: #00ccff !important; /* Cyan */
+}
+
+.accessibility-colorblind .recharts-surface .recharts-pie-sector:nth-child(4) {
+  fill: #cc00ff !important; /* Magenta */
+}
+
+.accessibility-colorblind .recharts-surface .recharts-pie-sector:nth-child(5) {
+  fill: #ffcc00 !important; /* Amarillo */
+}
+
+/* ============================================
+   NAVEGACIÓN POR TECLADO MEJORADA
+   ============================================ */
 .accessibility-keyboard-nav *:focus {
-  outline: 3px solid #007bff !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5) !important;
+  outline: 4px solid #007bff !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.3) !important;
+  border-radius: 4px !important;
 }
 
-/* Objetivos de Clic Grandes */
+.accessibility-keyboard-nav button:focus,
+.accessibility-keyboard-nav a:focus,
+.accessibility-keyboard-nav input:focus,
+.accessibility-keyboard-nav select:focus,
+.accessibility-keyboard-nav textarea:focus {
+  outline: 4px solid #007bff !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.4) !important;
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.accessibility-keyboard-nav *:focus-visible {
+  outline: 4px solid #007bff !important;
+  outline-offset: 3px !important;
+}
+
+/* ============================================
+   OBJETIVOS DE CLIC GRANDES
+   ============================================ */
 .accessibility-large-targets button,
 .accessibility-large-targets a,
 .accessibility-large-targets input[type="submit"],
-.accessibility-large-targets input[type="button"] {
+.accessibility-large-targets input[type="button"],
+.accessibility-large-targets [role="button"] {
   min-width: 44px !important;
   min-height: 44px !important;
-  padding: 12px !important;
+  padding: 12px 20px !important;
+  font-size: 1rem !important;
 }
 
-/* Fuente Amigable para Dislexia */
+.accessibility-large-targets button svg,
+.accessibility-large-targets a svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* ============================================
+   FUENTE AMIGABLE PARA DISLEXIA
+   ============================================ */
 .accessibility-dyslexia-font,
 .accessibility-dyslexia-font * {
-  font-family: 'OpenDyslexic', sans-serif !important;
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
 }
 
+.accessibility-dyslexia-font h1,
+.accessibility-dyslexia-font h2,
+.accessibility-dyslexia-font h3,
+.accessibility-dyslexia-font h4,
+.accessibility-dyslexia-font h5,
+.accessibility-dyslexia-font h6 {
+  font-weight: 700 !important;
+  line-height: 1.6 !important;
+}
+
+/* ============================================
+   MODO LECTURA FÁCIL
+   ============================================ */
+.accessibility-easy-reading {
+  line-height: 2 !important;
+}
+
+.accessibility-easy-reading p,
+.accessibility-easy-reading li,
+.accessibility-easy-reading span {
+  line-height: 2 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.accessibility-easy-reading .card,
+.accessibility-easy-reading .rounded-xl,
+.accessibility-easy-reading .shadow-lg {
+  box-shadow: none !important;
+  border: 2px solid var(--color-border) !important;
+}
+
+.accessibility-easy-reading .rounded-xl {
+  border-radius: 0.5rem !important;
+}
+
+.accessibility-easy-reading h1,
+.accessibility-easy-reading h2,
+.accessibility-easy-reading h3 {
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* ============================================
+   MODO ANTI-TEMBLOR
+   ============================================ */
+.accessibility-anti-tremor button,
+.accessibility-anti-tremor a,
+.accessibility-anti-tremor input[type="submit"],
+.accessibility-anti-tremor input[type="button"] {
+  min-width: 60px !important;
+  min-height: 60px !important;
+  padding: 16px 24px !important;
+  margin: 8px !important;
+  border-radius: 12px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+}
+
+.accessibility-anti-tremor .flex.gap-2,
+.accessibility-anti-tremor .flex.gap-4 {
+  gap: 16px !important;
+}
+
+.accessibility-anti-tremor .grid.gap-4,
+.accessibility-anti-tremor .grid.gap-6 {
+  gap: 24px !important;
+}
+
+/* ============================================
+   MEJORAS GENERALES DE ACCESIBILIDAD
+   ============================================ */
+
+/* Asegurar contraste mínimo en todos los textos */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mejorar legibilidad de enlaces */
+a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Mejorar contraste de botones deshabilitados */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Asegurar que los elementos interactivos sean accesibles */
+[role="button"],
+[role="link"],
+[role="tab"],
+[role="menuitem"] {
+  cursor: pointer;
+}
+
+/* Mejorar visibilidad de campos de formulario */
+input,
+select,
+textarea {
+  border-width: 2px !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Mejorar visibilidad de errores */
+.error,
+.invalid,
+[aria-invalid="true"] {
+  border-color: #dc3545 !important;
+  border-width: 3px !important;
+}
+
+/* Mejorar visibilidad de éxito */
+.success,
+.valid {
+  border-color: #28a745 !important;
+}
+
+/* Asegurar que los iconos decorativos no interfieran con lectores de pantalla */
+[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+/* Mejorar scrollbar para accesibilidad */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

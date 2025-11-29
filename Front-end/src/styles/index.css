@@ -1,16 +1,47 @@
 @import "tailwindcss";
+@import "./theme.css";
 
-body {
-  font-family: 'Inter', sans-serif;
+/**
+ * Estilos Globales - Teletón Voluntariado
+ * Diseño moderno, accesible y responsivo
+ */
+
+/* Fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap');
+
+:root {
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-normal);
+  font-weight: 400;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-secondary);
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   UTILIDADES GLOBALES
+   ============================================ */
+
 @layer utilities {
+  /* Texto Amarillo para Alto Contraste */
   .hc-text-yellow {
     color: #ffff00 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
   
+  /* Scrollbar Personalizado */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
+    height: 8px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
@@ -27,8 +58,17 @@ body {
     background: #555;
   }
   
+  /* Animaciones Suaves */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
   }
   
   @keyframes fadeIn {
@@ -41,5 +81,253 @@ body {
       transform: translateY(0);
     }
   }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Transiciones Suaves */
+  .transition-smooth {
+    transition: all var(--transition-base);
+  }
+  
+  /* Sombras Modernas */
+  .shadow-soft {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-medium {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shadow-strong {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* Bordes Suaves */
+  .rounded-soft {
+    border-radius: var(--border-radius-lg);
+  }
+  
+  .rounded-very-soft {
+    border-radius: var(--border-radius-2xl);
+  }
+  
+  /* Espaciado Accesible */
+  .spacing-comfortable > * + * {
+    margin-top: var(--spacing-lg);
+  }
+  
+  .spacing-relaxed > * + * {
+    margin-top: var(--spacing-xl);
+  }
 }
 
+/* ============================================
+   COMPONENTES BASE MEJORADOS
+   ============================================ */
+
+/* Tarjetas Modernas */
+.card-modern {
+  background: var(--color-bg-primary);
+  border-radius: var(--border-radius-2xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-base);
+}
+
+.card-modern:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Botones Modernos */
+.btn-modern {
+  padding: 12px 24px;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-base);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--min-button-height);
+}
+
+.btn-modern:focus {
+  outline: 3px solid #007bff;
+  outline-offset: 2px;
+}
+
+.btn-modern:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-modern:active {
+  transform: translateY(0);
+}
+
+/* Botón Primario */
+.btn-primary {
+  background: linear-gradient(135deg, var(--teleton-red) 0%, #b80018 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #b80018 0%, #9a0014 100%);
+}
+
+/* Botón Secundario */
+.btn-secondary {
+  background: var(--teleton-purple);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #4a1f73;
+}
+
+/* Inputs Modernos */
+.input-modern {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--color-border);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-base);
+  background: var(--color-bg-primary);
+}
+
+.input-modern:focus {
+  border-color: var(--teleton-red);
+  box-shadow: 0 0 0 3px rgba(214, 0, 28, 0.1);
+  outline: none;
+}
+
+.input-modern::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+}
+
+/* ============================================
+   MEJORAS DE RESPONSIVIDAD
+   ============================================ */
+
+@media (max-width: 768px) {
+  .card-modern {
+    padding: var(--spacing-lg);
+  }
+  
+  .btn-modern {
+    width: 100%;
+    padding: 14px 20px;
+  }
+}
+
+/* ============================================
+   MEJORAS DE ACCESIBILIDAD BASE
+   ============================================ */
+
+/* Asegurar que los elementos interactivos sean accesibles */
+button,
+a,
+input,
+select,
+textarea {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* Mejorar visibilidad de focus por defecto */
+*:focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Mejorar contraste de textos */
+p, span, div {
+  color: var(--color-text-primary);
+}
+
+/* Mejorar legibilidad de listas */
+ul, ol {
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+  line-height: var(--line-height-relaxed);
+}
+
+/* Mejorar espaciado de párrafos */
+p {
+  margin-bottom: 1rem;
+  line-height: var(--line-height-relaxed);
+}
+
+/* Mejorar jerarquía de títulos */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-primary);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+}
+
+/* Mejorar visibilidad de enlaces */
+a {
+  color: var(--teleton-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: #b80018;
+  text-decoration-thickness: 2px;
+}
+
+a:focus {
+  outline: 3px solid #007bff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}

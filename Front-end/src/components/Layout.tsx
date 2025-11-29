@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Upload, Settings, Heart, LogOut, PlusCircle } from 'lucide-react';
 import { useAccessibility } from '../providers/AccessibilityProvider';
-import AccessibilitySettingsSidebar from './AccessibilitySettingsSidebar';
+import AccessibilityPanel from './accessibility/AccessibilityPanel';
 
 interface LayoutProps {
   children: ReactNode;
@@ -120,8 +120,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </main>
       </div>
 
-      {/* Accessibility Settings Sidebar */}
-      <AccessibilitySettingsSidebar />
+      {/* Accessibility Panel */}
+      <AccessibilityPanel />
     </div>
   );
 };
