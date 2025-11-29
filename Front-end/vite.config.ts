@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [react()],
   // Exponer variables de entorno con prefijo VITE_ (estándar de Vite)
   envPrefix: ['VITE_'],
-  define: {},
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+  },
   css: {
     devSourcemap: true
   },
@@ -24,14 +26,21 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Separar vendor chunks
+          // Separar vendor chunks de forma más específica
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
+            // React core debe estar separado
+            if (id.includes('react/') || id.includes('react-dom/')) {
+              return 'react-core';
             }
+            // React Router debe estar en su propio chunk
+            if (id.includes('react-router')) {
+              return 'react-router';
+            }
+            // Recharts en su propio chunk
             if (id.includes('recharts')) {
               return 'chart-vendor';
             }
+            // Resto de vendors
             return 'vendor';
           }
         }
