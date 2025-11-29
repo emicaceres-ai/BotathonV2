@@ -13,6 +13,20 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       open: true
     },
+    build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: false,
+      minify: 'esbuild',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'chart-vendor': ['recharts']
+          }
+        }
+      }
+    },
     define: {
       // Exponer variables de entorno para el cliente
       'process.env.NEXT_PUBLIC_SUPABASE_URL': JSON.stringify(
