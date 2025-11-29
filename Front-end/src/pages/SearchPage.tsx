@@ -110,7 +110,7 @@ export default function SearchPage() {
       const result = await response.json();
       const data = Array.isArray(result) ? result : (result.data || []);
 
-      // Aquí se activaría Blue Prism
+      // Acción RPA ejecutada
       alert(`${type === 'retencion' ? 'Comunicación Proactiva' : 'Inscripción Urgente'} activada para ${data.length} voluntarios`);
     } catch (err) {
       alert('Error al activar acción RPA');

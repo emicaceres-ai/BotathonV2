@@ -6,7 +6,7 @@
     <title>Teletón Voluntarios MVP</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>" />
     <script>
-      // Desregistrar service workers en desarrollo (evita problemas con workbox/Blue Prism)
+      // Desregistrar service workers en desarrollo
       if ('serviceWorker' in navigator && window.location.hostname === 'localhost') {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           for(let registration of registrations) {
@@ -25,16 +25,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // Prevenir carga de BluePrism en producción
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        // Bloquear cualquier intento de cargar bluePrismPlugin en producción
-        Object.defineProperty(window, 'bluePrismPlugin', {
-          get: function() { return undefined; },
-          set: function() { return; },
-          configurable: false
-        });
-      }
-    </script>
 </body>
 </html>
