@@ -87,8 +87,8 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
             <p className={`text-xs ${isHighContrast ? 'text-white' : 'text-gray-500'}`}>Dominio Salud (41%) y Educación (14%)</p>
           </div>
           
-          <div className="w-full h-64" aria-label="Gráfico de dona mostrando distribución de áreas de estudio">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full h-64 min-h-[256px]" aria-label="Gráfico de dona mostrando distribución de áreas de estudio">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={256}>
               <PieChart>
                 <Pie
                   data={TALENT_DISTRIBUTION}
@@ -130,8 +130,8 @@ const ChartsSection: React.FC<ChartProps> = ({ isHighContrast }) => {
           Motivaciones para el Ingreso
         </h3>
         <p className={`text-xs mb-4 ${isHighContrast ? 'text-white' : 'text-gray-500'}`}>Principales razones declaradas en la encuesta</p>
-        <div className="w-full h-64">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="w-full h-64 min-h-[256px]">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={256}>
             <BarChart
               data={MOTIVATION_DATA}
               layout="vertical"
