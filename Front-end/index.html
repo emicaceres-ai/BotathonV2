@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teletón Voluntarios MVP</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <script>
       // Desregistrar service workers en desarrollo (evita problemas con workbox/Blue Prism)
       if ('serviceWorker' in navigator && window.location.hostname === 'localhost') {
@@ -22,30 +21,6 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              teleton: {
-                red: '#d91f26',
-                dark: '#b91b22',
-                light: '#fde7e8'
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f3f4f6;
-      }
-    </style>
   <script type="importmap">
 {
   "imports": {

@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
+    // Exponer variables de entorno con prefijo NEXT_PUBLIC_ para Vercel
+    envPrefix: ['NEXT_PUBLIC_', 'VITE_'],
     server: {
       port: 5173,
       host: '0.0.0.0',
@@ -28,12 +30,12 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      // Exponer variables de entorno para el cliente
+      // Exponer variables de entorno para el cliente (compatibilidad con Vercel)
       'process.env.NEXT_PUBLIC_SUPABASE_URL': JSON.stringify(
-        env.NEXT_PUBLIC_SUPABASE_URL || 'https://tatvmyjoinyfkxeclbso.supabase.co'
+        env.NEXT_PUBLIC_SUPABASE_URL || import.meta.env?.NEXT_PUBLIC_SUPABASE_URL || 'https://tatvmyjoinyfkxeclbso.supabase.co'
       ),
       'process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY': JSON.stringify(
-        env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+        env.NEXT_PUBLIC_SUPABASE_ANON_KEY || import.meta.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
       ),
     },
     resolve: {
