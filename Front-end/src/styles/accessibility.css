@@ -1,0 +1,69 @@
+/* ============================================
+   ESTILOS DE ACCESIBILIDAD GLOBALES
+   ============================================ */
+
+/* Alto Contraste Extremo (WCAG AAA - 7:1) */
+.accessibility-high-contrast,
+.accessibility-high-contrast * {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+}
+
+.accessibility-high-contrast button,
+.accessibility-high-contrast a,
+.accessibility-high-contrast input,
+.accessibility-high-contrast select,
+.accessibility-high-contrast textarea {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: none !important;
+}
+
+.accessibility-high-contrast .bg-white {
+  background-color: #000000 !important;
+}
+
+.accessibility-high-contrast .text-gray-900,
+.accessibility-high-contrast .text-gray-800,
+.accessibility-high-contrast .text-gray-700,
+.accessibility-high-contrast .text-gray-600,
+.accessibility-high-contrast .text-gray-500 {
+  color: #FFFFFF !important;
+}
+
+.accessibility-high-contrast .border-gray-100,
+.accessibility-high-contrast .border-gray-200,
+.accessibility-high-contrast .border-gray-300 {
+  border-color: #FFFFFF !important;
+}
+
+/* Esquema Daltónico Amigable */
+.accessibility-colorblind .recharts-surface .recharts-pie-sector {
+  /* Aplicar patrones o colores específicos */
+}
+
+/* Navegación por Teclado Mejorada */
+.accessibility-keyboard-nav *:focus {
+  outline: 3px solid #007bff !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5) !important;
+}
+
+/* Objetivos de Clic Grandes */
+.accessibility-large-targets button,
+.accessibility-large-targets a,
+.accessibility-large-targets input[type="submit"],
+.accessibility-large-targets input[type="button"] {
+  min-width: 44px !important;
+  min-height: 44px !important;
+  padding: 12px !important;
+}
+
+/* Fuente Amigable para Dislexia */
+.accessibility-dyslexia-font,
+.accessibility-dyslexia-font * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
