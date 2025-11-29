@@ -217,57 +217,82 @@ export default function DashboardPage() {
       {/* 2. KPIs Section - Métricas Críticas del MVP */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* KPI: Razón Principal de Baja */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          role="region"
+          aria-label="Razón Principal de Baja"
+          aria-describedby="razon-desc"
+        >
           <p className="text-sm font-medium text-gray-500 mb-1">Razón Principal de Baja</p>
-          <h3 className="text-3xl font-bold text-gray-900">
+          <h3 className="text-3xl font-bold text-gray-900" aria-live="polite">
             {loading ? "-" : `${porcentajeRazonPrincipal}%`}
           </h3>
-          <p className="text-xs text-gray-400 mt-2">Falta de Tiempo</p>
+          <p id="razon-desc" className="text-xs text-gray-400 mt-2">Falta de Tiempo</p>
         </div>
 
         {/* KPI: Talento en Salud */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          role="region"
+          aria-label="Talento en Salud"
+          aria-describedby="salud-desc"
+        >
           <p className="text-sm font-medium text-gray-500 mb-1">Talento en Salud</p>
-          <h3 className="text-3xl font-bold text-gray-900">
+          <h3 className="text-3xl font-bold text-gray-900" aria-live="polite">
             {loading ? "-" : `${porcentajeTalentoSalud}%`}
           </h3>
-          <p className="text-xs text-gray-400 mt-2">Área de Estudio: Salud</p>
+          <p id="salud-desc" className="text-xs text-gray-400 mt-2">Área de Estudio: Salud</p>
         </div>
 
         {/* KPI: Rango Etario 18-29 */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          role="region"
+          aria-label="Rango Etario 18-29 años"
+          aria-describedby="rango-desc"
+        >
           <p className="text-sm font-medium text-gray-500 mb-1">Rango Etario 18-29</p>
-          <h3 className="text-3xl font-bold text-gray-900">
+          <h3 className="text-3xl font-bold text-gray-900" aria-live="polite">
             {loading ? "-" : `${porcentajeRango1829}%`}
           </h3>
-          <p className="text-xs text-gray-400 mt-2">Voluntarios jóvenes</p>
+          <p id="rango-desc" className="text-xs text-gray-400 mt-2">Voluntarios jóvenes</p>
         </div>
 
         {/* KPI: En Riesgo */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          role="region"
+          aria-label="Voluntarios en Riesgo"
+          aria-describedby="riesgo-desc"
+        >
           <p className="text-sm font-medium text-gray-500 mb-1">En Riesgo</p>
-          <h3 className="text-3xl font-bold text-orange-600">
+          <h3 className="text-3xl font-bold text-orange-600" aria-live="polite">
             {loading ? "-" : enRiesgo}
           </h3>
-          <p className="text-xs text-gray-400 mt-2">Score ≥ 75</p>
+          <p id="riesgo-desc" className="text-xs text-gray-400 mt-2">Score ≥ 75</p>
         </div>
       </div>
 
       {/* 2b. KPIs Adicionales */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {/* KPI Card 1 */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start justify-between">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start justify-between"
+          role="region"
+          aria-label="Total de Voluntarios"
+          aria-describedby="total-desc"
+        >
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Total Voluntarios</p>
-            <h3 className="text-3xl font-bold text-gray-900">
+            <h3 className="text-3xl font-bold text-gray-900" aria-live="polite">
               {loading ? "-" : totalVolunteers}
             </h3>
-            <p className="text-xs text-green-600 font-medium mt-2 flex items-center gap-1">
-              <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+            <p id="total-desc" className="text-xs text-green-600 font-medium mt-2 flex items-center gap-1">
+              <span className="inline-block w-2 h-2 rounded-full bg-green-500" aria-hidden="true"></span>
               Base de datos activa
             </p>
           </div>
-          <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+          <div className="p-3 bg-blue-50 rounded-lg text-blue-600" aria-hidden="true">
             <Users className="h-6 w-6" />
           </div>
         </div>
@@ -340,10 +365,20 @@ export default function DashboardPage() {
       {/* 3. Gráficos Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Gráfico de Dona - Distribución de Talento */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          role="region"
+          aria-label="Gráfico de Distribución de Talento por Área de Estudio"
+        >
           <div className="mb-6">
             <h3 className="text-lg font-bold text-gray-900">Distribución de Talento</h3>
             <p className="text-sm text-gray-500">Por Área de Estudio (énfasis en Salud)</p>
+            <p className="sr-only" id="dona-desc">
+              Gráfico de Dona mostrando la distribución de voluntarios por área de estudio. 
+              {donutData.length > 0 && donutData.map((item, idx) => 
+                `${item.name}: ${((item.value / totalVolunteers) * 100).toFixed(1)}%${idx < donutData.length - 1 ? ', ' : '.'}`
+              ).join('')}
+            </p>
           </div>
           <div className="h-80 w-full">
             {loading ? (
@@ -356,7 +391,7 @@ export default function DashboardPage() {
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart aria-label="Gráfico de Dona de Distribución de Talento">
                   <Pie
                     data={donutData}
                     cx="50%"
@@ -366,6 +401,7 @@ export default function DashboardPage() {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
+                    aria-labelledby="dona-desc"
                   >
                     {donutData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -380,10 +416,20 @@ export default function DashboardPage() {
         </div>
 
         {/* Gráfico de Barras - Distribución por Región */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+          role="region"
+          aria-label="Gráfico de Barras de Distribución por Región"
+        >
           <div className="mb-6">
             <h3 className="text-lg font-bold text-gray-900">Distribución por Región</h3>
             <p className="text-sm text-gray-500">Top regiones con mayor número de voluntarios</p>
+            <p className="sr-only" id="barras-desc">
+              Gráfico de Barras mostrando las top 10 regiones con mayor número de voluntarios. 
+              {chartData.length > 0 && chartData.map((item, idx) => 
+                `${item.name}: ${item.count} voluntarios${idx < chartData.length - 1 ? ', ' : '.'}`
+              ).join('')}
+            </p>
           </div>
           <div className="h-80 w-full">
             {loading ? (
@@ -396,7 +442,12 @@ export default function DashboardPage() {
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                <BarChart 
+                  data={chartData} 
+                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  aria-label="Gráfico de Barras de Distribución por Región"
+                  aria-labelledby="barras-desc"
+                >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.5} />
                   <XAxis 
                     dataKey="name" 
@@ -428,12 +479,24 @@ export default function DashboardPage() {
       </div>
 
       {/* 4. Mapa de Calor Regional */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <div 
+        className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+        role="region"
+        aria-label="Mapa de Esfuerzo Regional"
+      >
         <div className="mb-6">
           <h3 className="text-lg font-bold text-gray-900">Mapa de Esfuerzo Regional</h3>
           <p className="text-sm text-gray-500">Representatividad (%) por Instituto/Región - Áreas con baja participación requieren acción de captación</p>
+          <p className="sr-only" id="heatmap-desc">
+            Mapa de calor mostrando la representatividad por región. 
+            {heatMapData.length > 0 && heatMapData.map((item, idx) => 
+              `${item.region}: ${item.representatividad.toFixed(1)}% de representatividad, ${item.voluntarios} voluntarios${idx < heatMapData.length - 1 ? ', ' : '.'}`
+            ).join('')}
+          </p>
         </div>
-        <HeatMap data={heatMapData} />
+        <div aria-labelledby="heatmap-desc">
+          <HeatMap data={heatMapData} />
+        </div>
       </div>
 
       {/* Modal de Registro */}

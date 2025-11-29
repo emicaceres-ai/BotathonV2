@@ -32,7 +32,7 @@ export default function HeatMap({ data }: HeatMapProps) {
   const sortedData = [...data].sort((a, b) => a.representatividad - b.representatividad);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" role="region" aria-label="Mapa de Calor Regional">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Mapa de Esfuerzo Regional</h3>
         <div className="flex items-center gap-4 text-xs">

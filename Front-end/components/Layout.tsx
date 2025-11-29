@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, UserPlus, Heart, Menu, X, LogOut, Search, Settings } from 'lucide-react';
+import AccessibilitySettingsSidebar from './AccessibilitySettingsSidebar';
 
 interface LayoutProps {
   children: ReactNode;
@@ -105,6 +106,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+
+      {/* Panel de Accesibilidad */}
+      <AccessibilitySettingsSidebar />
     </div>
   );
 };
